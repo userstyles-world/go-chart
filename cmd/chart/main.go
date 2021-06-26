@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/wcharczuk/go-chart/v2"
+	"github.com/userstyles-world/go-chart/v2"
 )
 
 var (

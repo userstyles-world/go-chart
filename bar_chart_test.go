@@ -5,7 +5,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/wcharczuk/go-chart/v2/testutil"
+	"github.com/userstyles-world/go-chart/v2/testutil"
 )
 
 func TestBarChartRender(t *testing.T) {

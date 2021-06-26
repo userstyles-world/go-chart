@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/wcharczuk/go-chart/v2/drawing"
-	"github.com/wcharczuk/go-chart/v2/testutil"
+	"github.com/userstyles-world/go-chart/v2/drawing"
+	"github.com/userstyles-world/go-chart/v2/testutil"
 )
 
 func TestChartGetDPI(t *testing.T) {

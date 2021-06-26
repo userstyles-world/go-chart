@@ -3,7 +3,7 @@ package chart
 import (
 	"testing"
 
-	"github.com/wcharczuk/go-chart/v2/testutil"
+	"github.com/userstyles-world/go-chart/v2/testutil"
 )
 
 func TestYAxisGetTicks(t *testing.T) {
