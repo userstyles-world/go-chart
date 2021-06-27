@@ -29,7 +29,8 @@ func main() {
 
 	var rawData []byte
 	var err error
-	if *inputPath != "" {
+	switch {
+	case *inputPath != "":
 		if *inputPath == "-" {
 			rawData, err = ioutil.ReadAll(os.Stdin)
 			if err != nil {
@@ -41,9 +42,9 @@ func main() {
 				log.FatalErr(err)
 			}
 		}
-	} else if len(flag.Args()) > 0 {
+	case len(flag.Args()) > 0:
 		rawData = []byte(flag.Args()[0])
-	} else {
+	default:
 		flag.Usage()
 		os.Exit(1)
 	}

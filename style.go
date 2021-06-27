@@ -68,7 +68,7 @@ type Style struct {
 	TextVerticalAlign   TextVerticalAlign
 	TextWrap            TextWrap
 	TextLineSpacing     int
-	TextRotationDegrees float64 //0 is unset or normal
+	TextRotationDegrees float64 // 0 is unset or normal
 }
 
 // IsZero returns if the object is set or not.

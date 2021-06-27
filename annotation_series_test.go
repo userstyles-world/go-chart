@@ -52,7 +52,7 @@ func TestAnnotationSeriesMeasure(t *testing.T) {
 	testutil.AssertFalse(t, box.IsZero())
 	testutil.AssertEqual(t, -5.0, box.Top)
 	testutil.AssertEqual(t, 5.0, box.Left)
-	testutil.AssertEqual(t, 146.0, box.Right) //the top,left annotation sticks up 5px and out ~44px.
+	testutil.AssertEqual(t, 146.0, box.Right) // the top,left annotation sticks up 5px and out ~44px.
 	testutil.AssertEqual(t, 115.0, box.Bottom)
 }
 

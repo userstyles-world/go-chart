@@ -107,7 +107,7 @@ func (t text) WrapFitWord(r Renderer, value string, width int, style Style) []st
 			word = ""
 			continue
 		}
-		word = word + string(c)
+		word += string(c)
 	}
 
 	return append(output, t.Trim(line+word))
@@ -133,7 +133,7 @@ func (t text) WrapFitRune(r Renderer, value string, width int, style Style) []st
 			line = string(c)
 			continue
 		}
-		line = line + string(c)
+		line += string(c)
 	}
 	return t.appendLast(output, line)
 }

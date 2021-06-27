@@ -234,7 +234,7 @@ func (s Seq) StdDev() float64 {
 	return math.Pow(s.Variance(), 0.5)
 }
 
-//Percentile finds the relative standing in a slice of floats.
+// Percentile finds the relative standing in a slice of floats.
 // `percent` should be given on the interval [0,1.0).
 func (s Seq) Percentile(percent float64) (percentile float64) {
 	l := s.Len()

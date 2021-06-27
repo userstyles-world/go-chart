@@ -54,7 +54,8 @@ func (r *RandomSeq) Len() int {
 
 // GetValue returns the value.
 func (r *RandomSeq) GetValue(_ int) float64 {
-	if r.min != nil && r.max != nil {
+	switch {
+	case r.min != nil && r.max != nil:
 		var delta float64
 
 		if *r.max > *r.min {
@@ -64,12 +65,13 @@ func (r *RandomSeq) GetValue(_ int) float64 {
 		}
 
 		return *r.min + (randFloat64(r.rnd) * delta)
-	} else if r.max != nil {
+	case r.max != nil:
 		return randFloat64(r.rnd) * *r.max
-	} else if r.min != nil {
+	case r.min != nil:
 		return *r.min + randFloat64(r.rnd)
+	default:
+		return randFloat64(r.rnd)
 	}
-	return randFloat64(r.rnd)
 }
 
 // WithLen sets a maximum len

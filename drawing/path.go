@@ -72,7 +72,7 @@ func (p *Path) MoveTo(x, y float64) {
 
 // LineTo adds a line to the current path
 func (p *Path) LineTo(x, y float64) {
-	if len(p.Components) == 0 { //special case when no move has been done
+	if len(p.Components) == 0 { // special case when no move has been done
 		p.MoveTo(0, 0)
 	}
 	p.appendToPath(LineToComponent, x, y)
@@ -82,7 +82,7 @@ func (p *Path) LineTo(x, y float64) {
 
 // QuadCurveTo adds a quadratic bezier curve to the current path
 func (p *Path) QuadCurveTo(cx, cy, x, y float64) {
-	if len(p.Components) == 0 { //special case when no move has been done
+	if len(p.Components) == 0 { // special case when no move has been done
 		p.MoveTo(0, 0)
 	}
 	p.appendToPath(QuadCurveToComponent, cx, cy, x, y)
@@ -92,7 +92,7 @@ func (p *Path) QuadCurveTo(cx, cy, x, y float64) {
 
 // CubicCurveTo adds a cubic bezier curve to the current path
 func (p *Path) CubicCurveTo(cx1, cy1, cx2, cy2, x, y float64) {
-	if len(p.Components) == 0 { //special case when no move has been done
+	if len(p.Components) == 0 { // special case when no move has been done
 		p.MoveTo(0, 0)
 	}
 	p.appendToPath(CubicCurveToComponent, cx1, cy1, cx2, cy2, x, y)
@@ -164,19 +164,19 @@ func (p *Path) String() string {
 		switch cmd {
 		case MoveToComponent:
 			s += fmt.Sprintf("MoveTo: %f, %f\n", p.Points[j], p.Points[j+1])
-			j = j + 2
+			j += 2
 		case LineToComponent:
 			s += fmt.Sprintf("LineTo: %f, %f\n", p.Points[j], p.Points[j+1])
-			j = j + 2
+			j += 2
 		case QuadCurveToComponent:
 			s += fmt.Sprintf("QuadCurveTo: %f, %f, %f, %f\n", p.Points[j], p.Points[j+1], p.Points[j+2], p.Points[j+3])
-			j = j + 4
+			j += 4
 		case CubicCurveToComponent:
 			s += fmt.Sprintf("CubicCurveTo: %f, %f, %f, %f, %f, %f\n", p.Points[j], p.Points[j+1], p.Points[j+2], p.Points[j+3], p.Points[j+4], p.Points[j+5])
-			j = j + 6
+			j += 6
 		case ArcToComponent:
 			s += fmt.Sprintf("ArcTo: %f, %f, %f, %f, %f, %f\n", p.Points[j], p.Points[j+1], p.Points[j+2], p.Points[j+3], p.Points[j+4], p.Points[j+5])
-			j = j + 6
+			j += 6
 		case CloseComponent:
 			s += "Close\n"
 		}

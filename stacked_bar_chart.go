@@ -189,8 +189,8 @@ func (sbc StackedBarChart) drawBar(r Renderer, canvasBox Box, xoffset int, bar S
 
 			bv.Style.InheritFrom(sbc.styleDefaultsStackedBarValue(index)).WriteToRenderer(r)
 			tb := r.MeasureText(bv.Label)
-			lx = lx - (tb.Width() >> 1)
-			ly = ly + (tb.Height() >> 1)
+			lx -= (tb.Width() >> 1)
+			ly += (tb.Height() >> 1)
 
 			if lx < 0 {
 				lx = 0
@@ -240,8 +240,8 @@ func (sbc StackedBarChart) drawHorizontalBar(r Renderer, canvasBox Box, yoffset 
 
 			bv.Style.InheritFrom(sbc.styleDefaultsStackedBarValue(index)).WriteToRenderer(r)
 			tb := r.MeasureText(bv.Label)
-			lx = lx - (tb.Width() >> 1)
-			ly = ly + (tb.Height() >> 1)
+			lx -= (tb.Width() >> 1)
+			ly += (tb.Height() >> 1)
 
 			if lx < 0 {
 				lx = 0
@@ -551,30 +551,34 @@ func (sbc StackedBarChart) StyleDefaultsTitle() Style {
 
 func (sbc StackedBarChart) getScaledFontSize() float64 {
 	effectiveDimension := MinInt(sbc.GetWidth(), sbc.GetHeight())
-	if effectiveDimension >= 2048 {
+	switch {
+	case effectiveDimension >= 2048:
 		return 48.0
-	} else if effectiveDimension >= 1024 {
+	case effectiveDimension >= 1024:
 		return 24.0
-	} else if effectiveDimension > 512 {
+	case effectiveDimension >= 512:
 		return 18.0
-	} else if effectiveDimension > 256 {
+	case effectiveDimension >= 256:
 		return 12.0
+	default:
+		return 10.0
 	}
-	return 10.0
 }
 
 func (sbc StackedBarChart) GetTitleFontSize() float64 {
 	effectiveDimension := MinInt(sbc.GetWidth(), sbc.GetHeight())
-	if effectiveDimension >= 2048 {
+	switch {
+	case effectiveDimension >= 2048:
 		return 48
-	} else if effectiveDimension >= 1024 {
+	case effectiveDimension >= 1024:
 		return 24
-	} else if effectiveDimension >= 512 {
+	case effectiveDimension >= 512:
 		return 18
-	} else if effectiveDimension >= 256 {
+	case effectiveDimension >= 256:
 		return 12
+	default:
+		return 10
 	}
-	return 10
 }
 
 func (sbc StackedBarChart) styleDefaultsAxes() Style {

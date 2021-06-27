@@ -147,11 +147,11 @@ func (pc DonutChart) drawSlices(r Renderer, canvasBox Box, values []Value) {
 			r.LineTo(cx, cy)
 			r.Close()
 			r.FillStroke()
-			total = total + v.Value
+			total += v.Value
 		}
 	}
 
-	//making the donut hole
+	// making the donut hole
 	v := Value{Value: 100, Label: "center"}
 	styletemp := pc.SliceStyle.InheritFrom(Style{
 		StrokeColor: ColorWhite, StrokeWidth: 4.0, FillColor: ColorWhite, FontColor: ColorWhite, //Font:        pc.GetFont(),//FontSize:    pc.getScaledFontSize(),
@@ -173,12 +173,12 @@ func (pc DonutChart) drawSlices(r Renderer, canvasBox Box, values []Value) {
 			lx, ly = CirclePoint(cx, cy, labelRadius, delta2)
 
 			tb := r.MeasureText(v.Label)
-			lx = lx - (tb.Width() >> 1)
-			ly = ly + (tb.Height() >> 1)
+			lx -= (tb.Width() >> 1)
+			ly += (tb.Height() >> 1)
 
 			r.Text(v.Label, lx, ly)
 		}
-		total = total + v.Value
+		total += v.Value
 	}
 }
 
@@ -242,16 +242,18 @@ func (pc DonutChart) styleDonutChartValue(index int) Style {
 
 func (pc DonutChart) getScaledFontSize() float64 {
 	effectiveDimension := MinInt(pc.GetWidth(), pc.GetHeight())
-	if effectiveDimension >= 2048 {
+	switch {
+	case effectiveDimension >= 2048:
 		return 48.0
-	} else if effectiveDimension >= 1024 {
+	case effectiveDimension >= 1024:
 		return 24.0
-	} else if effectiveDimension > 512 {
+	case effectiveDimension >= 512:
 		return 18.0
-	} else if effectiveDimension > 256 {
+	case effectiveDimension >= 256:
 		return 12.0
+	default:
+		return 10.0
 	}
-	return 10.0
 }
 
 func (pc DonutChart) styleDefaultsBackground() Style {
@@ -281,16 +283,18 @@ func (pc DonutChart) styleDefaultsTitle() Style {
 
 func (pc DonutChart) getTitleFontSize() float64 {
 	effectiveDimension := MinInt(pc.GetWidth(), pc.GetHeight())
-	if effectiveDimension >= 2048 {
+	switch {
+	case effectiveDimension >= 2048:
 		return 48
-	} else if effectiveDimension >= 1024 {
+	case effectiveDimension >= 1024:
 		return 24
-	} else if effectiveDimension >= 512 {
+	case effectiveDimension >= 512:
 		return 18
-	} else if effectiveDimension >= 256 {
+	case effectiveDimension >= 256:
 		return 12
+	default:
+		return 10
 	}
-	return 10
 }
 
 // GetColorPalette returns the color palette for the chart.

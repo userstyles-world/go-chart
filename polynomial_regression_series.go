@@ -143,7 +143,7 @@ func (prs *PolynomialRegressionSeries) GetLastValues() (x, y float64) {
 
 func (prs *PolynomialRegressionSeries) apply(v float64) (out float64) {
 	for index, coeff := range prs.coeffs {
-		out = out + (coeff * math.Pow(v, float64(index)))
+		out += (coeff * math.Pow(v, float64(index)))
 	}
 	return
 }

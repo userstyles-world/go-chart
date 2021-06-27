@@ -71,7 +71,7 @@ func Debugf(log Logger, format string, arguments ...interface{}) {
 // LoggerOption mutates a stdout logger.
 type LoggerOption = func(*StdoutLogger)
 
-//OptLoggerStdout sets the Stdout writer.
+// OptLoggerStdout sets the Stdout writer.
 func OptLoggerStdout(wr io.Writer) LoggerOption {
 	return func(stl *StdoutLogger) {
 		stl.Stdout = wr

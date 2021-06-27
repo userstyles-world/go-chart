@@ -14,13 +14,14 @@ func SplitCSV(text string) (output []string) {
 	for _, r := range text {
 		switch state {
 		case 0: // word
-			if isQuote(r) {
+			switch {
+			case isQuote(r):
 				opened = r
 				state = 1
-			} else if isCSVDelim(r) {
+			case isCSVDelim(r):
 				output = append(output, strings.TrimSpace(string(word)))
 				word = nil
-			} else {
+			default:
 				word = append(word, r)
 			}
 		case 1: // we're in a quoted section

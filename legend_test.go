@@ -20,7 +20,7 @@ func TestLegend(t *testing.T) {
 		},
 	}
 
-	//note we have to do this as a separate step because we need a reference to graph
+	// note we have to do this as a separate step because we need a reference to graph
 	graph.Elements = []Renderable{
 		Legend(&graph),
 	}

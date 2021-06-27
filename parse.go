@@ -13,7 +13,7 @@ func ParseFloats(values ...string) ([]float64, error) {
 	var err error
 	var cleaned string
 	for _, value := range values {
-		cleaned = strings.TrimSpace(strings.Replace(value, ",", "", -1))
+		cleaned = strings.TrimSpace(strings.ReplaceAll(value, ",", ""))
 		if cleaned == "" {
 			continue
 		}

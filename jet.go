@@ -15,16 +15,17 @@ func Jet(v, vmin, vmax float64) drawing.Color {
 	}
 	dv = vmax - vmin
 
-	if v < (vmin + 0.25*dv) {
+	switch {
+	case v < (vmin + 0.25*dv):
 		c.R = 0
 		c.G = drawing.ColorChannelFromFloat(4 * (v - vmin) / dv)
-	} else if v < (vmin + 0.5*dv) {
+	case v < (vmin + 0.5*dv):
 		c.R = 0
 		c.B = drawing.ColorChannelFromFloat(1 + 4*(vmin+0.25*dv-v)/dv)
-	} else if v < (vmin + 0.75*dv) {
+	case v < (vmin + 0.75*dv):
 		c.R = drawing.ColorChannelFromFloat(4 * (v - vmin - 0.5*dv) / dv)
 		c.B = 0
-	} else {
+	default:
 		c.G = drawing.ColorChannelFromFloat(1 + 4*(vmin+0.75*dv-v)/dv)
 		c.B = 0
 	}

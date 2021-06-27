@@ -196,7 +196,7 @@ func (tr Matrix) GetScale() float64 {
 
 // Equals tests if a two transformation are equal. A tolerance is applied when comparing matrix elements.
 func (tr Matrix) Equals(tr2 Matrix) bool {
-	for i := 0; i < 6; i = i + 1 {
+	for i := 0; i < 6; i++ {
 		if !fequals(tr[i], tr2[i]) {
 			return false
 		}

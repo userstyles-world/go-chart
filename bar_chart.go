@@ -476,16 +476,18 @@ func (bc BarChart) StyleDefaultsTitle() Style {
 
 func (bc BarChart) getTitleFontSize() float64 {
 	effectiveDimension := MinInt(bc.GetWidth(), bc.GetHeight())
-	if effectiveDimension >= 2048 {
+	switch {
+	case effectiveDimension >= 2048:
 		return 48
-	} else if effectiveDimension >= 1024 {
+	case effectiveDimension >= 1024:
 		return 24
-	} else if effectiveDimension >= 512 {
+	case effectiveDimension >= 512:
 		return 18
-	} else if effectiveDimension >= 256 {
+	case effectiveDimension >= 256:
 		return 12
+	default:
+		return 10
 	}
-	return 10
 }
 
 func (bc BarChart) styleDefaultsAxes() Style {

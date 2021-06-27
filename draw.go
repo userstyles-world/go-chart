@@ -140,7 +140,7 @@ func (d draw) HistogramSeries(r Renderer, canvasBox Box, xrange, yrange Range, s
 		return
 	}
 
-	//calculate bar width?
+	// calculate bar width?
 	seriesLength := vs.Len()
 	barWidth := int(math.Floor(float64(xrange.GetDomain()) / float64(seriesLength)))
 	if len(barWidths) > 0 {
@@ -150,7 +150,7 @@ func (d draw) HistogramSeries(r Renderer, canvasBox Box, xrange, yrange Range, s
 	cb := canvasBox.Bottom
 	cl := canvasBox.Left
 
-	//foreach datapoint, draw a box.
+	// foreach datapoint, draw a box.
 	for index := 0; index < seriesLength; index++ {
 		vx, vy := vs.GetValues(index)
 		y0 := yrange.Translate(0)
@@ -295,11 +295,11 @@ func (d draw) TextWithin(r Renderer, text string, box Box, style Style) {
 
 	switch style.GetTextVerticalAlign() {
 	case TextVerticalAlignBottom, TextVerticalAlignBaseline: // i have to build better baseline handling into measure text
-		y = y - linesBox.Height()
+		y -= linesBox.Height()
 	case TextVerticalAlignMiddle:
-		y = y + (box.Height() >> 1) - (linesBox.Height() >> 1)
+		y += (box.Height() >> 1) - (linesBox.Height() >> 1)
 	case TextVerticalAlignMiddleBaseline:
-		y = y + (box.Height() >> 1) - linesBox.Height()
+		y += (box.Height() >> 1) - linesBox.Height()
 	}
 
 	var tx, ty int

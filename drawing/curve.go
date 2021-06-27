@@ -162,7 +162,7 @@ func TraceArc(t Liner, x, y, rx, ry, start, angle, scale float64) (lastX, lastY 
 	}
 	ra := (math.Abs(rx) + math.Abs(ry)) / 2
 	da := math.Acos(ra/(ra+0.125/scale)) * 2
-	//normalize
+	// normalize
 	if !clockWise {
 		da = -da
 	}

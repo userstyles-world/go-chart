@@ -32,7 +32,7 @@ func main() {
 		},
 	}
 
-	//note we have to do this as a separate step because we need a reference to graph
+	// note we have to do this as a separate step because we need a reference to graph
 	graph.Elements = []chart.Renderable{
 		chart.Legend(&graph),
 	}

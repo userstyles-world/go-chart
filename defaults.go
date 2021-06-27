@@ -13,7 +13,7 @@ const (
 	DefaultSeriesLineWidth = 1.0
 	// DefaultAxisLineWidth is the line width of the axis lines.
 	DefaultAxisLineWidth = 1.0
-	//DefaultDPI is the default dots per inch for the chart.
+	// DefaultDPI is the default dots per inch for the chart.
 	DefaultDPI = 92.0
 	// DefaultMinimumFontSize is the default minimum font size.
 	DefaultMinimumFontSize = 8.0
@@ -43,15 +43,15 @@ const (
 	// DefaultXAxisMargin is the default distance from bottom of the canvas to the x axis labels.
 	DefaultXAxisMargin = 10
 
-	//DefaultVerticalTickHeight is half the margin.
+	// DefaultVerticalTickHeight is half the margin.
 	DefaultVerticalTickHeight = DefaultXAxisMargin >> 1
-	//DefaultHorizontalTickWidth is half the margin.
+	// DefaultHorizontalTickWidth is half the margin.
 	DefaultHorizontalTickWidth = DefaultYAxisMargin >> 1
 
 	// DefaultTickCount is the default number of ticks to show
 	DefaultTickCount = 10
 	// DefaultTickCountSanityCheck is a hard limit on number of ticks to prevent infinite loops.
-	DefaultTickCountSanityCheck = 1 << 10 //1024
+	DefaultTickCountSanityCheck = 1 << 10 // 1024
 
 	// DefaultMinimumTickHorizontalSpacing is the minimum distance between horizontal ticks.
 	DefaultMinimumTickHorizontalSpacing = 20

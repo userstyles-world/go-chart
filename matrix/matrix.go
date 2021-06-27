@@ -237,7 +237,7 @@ func (m *Matrix) SubMatrix(i, j, rows, cols int) *Matrix {
 func (m *Matrix) ScaleRow(row int, scale float64) {
 	startIndex := row * m.stride
 	for i := startIndex; i < m.stride; i++ {
-		m.elements[i] = m.elements[i] * scale
+		m.elements[i] *= scale
 	}
 }
 
@@ -422,7 +422,7 @@ func (m *Matrix) Times(m2 *Matrix) (*Matrix, error) {
 
 	if mc != m2r {
 		return nil, fmt.Errorf("cannot multiply (%dx%d) and (%dx%d)", mr, mc, m2r, m2c)
-		//return nil, ErrDimensionMismatch
+		// return nil, ErrDimensionMismatch
 	}
 
 	c := Zero(mr, m2c)

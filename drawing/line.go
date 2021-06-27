@@ -37,12 +37,12 @@ func Bresenham(img draw.Image, color color.Color, x0, y0, x1, y1 int) {
 		}
 		e2 = 2 * err
 		if e2 > -dy {
-			err = err - dy
-			x0 = x0 + sx
+			err -= dy
+			x0 += sx
 		}
 		if e2 < dx {
-			err = err + dx
-			y0 = y0 + sy
+			err += dx
+			y0 += sy
 		}
 	}
 }

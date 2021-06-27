@@ -345,11 +345,12 @@ func (c *canvas) styleAsSVG(s Style) string {
 		pieces = append(pieces, "stroke:none")
 	}
 
-	if !fnc.IsZero() {
+	switch {
+	case !fnc.IsZero():
 		pieces = append(pieces, "fill:"+fnc.String())
-	} else if !fc.IsZero() {
+	case !fc.IsZero():
 		pieces = append(pieces, "fill:"+fc.String())
-	} else {
+	default:
 		pieces = append(pieces, "fill:none")
 	}
 

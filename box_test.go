@@ -35,7 +35,7 @@ func TestBoxIsBiggerThan(t *testing.T) {
 
 	a := Box{Top: 5, Left: 5, Right: 25, Bottom: 25}
 	b := Box{Top: 10, Left: 10, Right: 20, Bottom: 20} // only half bigger
-	c := Box{Top: 1, Left: 1, Right: 30, Bottom: 30}   //bigger
+	c := Box{Top: 1, Left: 1, Right: 30, Bottom: 30}   // bigger
 	testutil.AssertTrue(t, a.IsBiggerThan(b))
 	testutil.AssertFalse(t, a.IsBiggerThan(c))
 	testutil.AssertTrue(t, c.IsBiggerThan(a))
@@ -46,7 +46,7 @@ func TestBoxIsSmallerThan(t *testing.T) {
 
 	a := Box{Top: 5, Left: 5, Right: 25, Bottom: 25}
 	b := Box{Top: 10, Left: 10, Right: 20, Bottom: 20} // only half bigger
-	c := Box{Top: 1, Left: 1, Right: 30, Bottom: 30}   //bigger
+	c := Box{Top: 1, Left: 1, Right: 30, Bottom: 30}   // bigger
 	testutil.AssertFalse(t, a.IsSmallerThan(b))
 	testutil.AssertTrue(t, a.IsSmallerThan(c))
 	testutil.AssertFalse(t, c.IsSmallerThan(a))
