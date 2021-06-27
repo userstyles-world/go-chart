@@ -125,7 +125,7 @@ func (rgc *RasterGraphicContext) drawGlyph(glyph truetype.Index, dx, dy float64)
 func (rgc *RasterGraphicContext) CreateStringPath(s string, x, y float64) (cursor float64, err error) {
 	f := rgc.GetFont()
 	if f == nil {
-		err = errors.New("No font loaded, cannot continue")
+		err = errors.New("no font loaded, cannot continue")
 		return
 	}
 	rgc.recalc()
@@ -153,7 +153,7 @@ func (rgc *RasterGraphicContext) CreateStringPath(s string, x, y float64) (curso
 func (rgc *RasterGraphicContext) GetStringBounds(s string) (left, top, right, bottom float64, err error) {
 	f := rgc.GetFont()
 	if f == nil {
-		err = errors.New("No font loaded, cannot continue")
+		err = errors.New("no font loaded, cannot continue")
 		return
 	}
 	rgc.recalc()
