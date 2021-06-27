@@ -49,7 +49,7 @@ func (gl GridLine) Render(r Renderer, canvasBox Box, ra Range, isVertical bool, 
 
 // GenerateGridLines generates grid lines.
 func GenerateGridLines(ticks []Tick, majorStyle, minorStyle Style) []GridLine {
-	gl := make([]GridLine, len(ticks)-2)
+	gl := make([]GridLine, 0, len(ticks)-2)
 	isMinor := false
 
 	if len(ticks) < 3 {

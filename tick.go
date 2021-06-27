@@ -37,7 +37,7 @@ func (t Ticks) Less(i, j int) bool {
 
 // String returns a string representation of the set of ticks.
 func (t Ticks) String() string {
-	values := make([]string, len(t))
+	values := make([]string, 0, len(t))
 	for i, tick := range t {
 		values = append(values, fmt.Sprintf("[%d: %s]", i, tick.Label))
 	}
