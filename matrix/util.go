@@ -16,17 +16,6 @@ func minInt(values ...int) int {
 	return min
 }
 
-func maxInt(values ...int) int {
-	max := math.MinInt32
-
-	for x := 0; x < len(values); x++ {
-		if values[x] > max {
-			max = values[x]
-		}
-	}
-	return max
-}
-
 func f64s(v float64) string {
 	return strconv.FormatFloat(v, 'f', -1, 64)
 }

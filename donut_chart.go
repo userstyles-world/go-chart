@@ -221,7 +221,7 @@ func (pc DonutChart) styleDefaultsCanvas() Style {
 	}
 }
 
-func (pc DonutChart) styleDefaultsDonutChartValue() Style {
+func (pc DonutChart) StyleDefaultsDonutChartValue() Style {
 	return Style{
 		StrokeColor: pc.GetColorPalette().TextColor(),
 		StrokeWidth: 4.0,

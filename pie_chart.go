@@ -217,7 +217,7 @@ func (pc PieChart) styleDefaultsCanvas() Style {
 	}
 }
 
-func (pc PieChart) styleDefaultsPieChartValue() Style {
+func (pc PieChart) StyleDefaultsPieChartValue() Style {
 	return Style{
 		StrokeColor: pc.GetColorPalette().TextColor(),
 		StrokeWidth: 5.0,

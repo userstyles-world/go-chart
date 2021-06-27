@@ -26,7 +26,8 @@ func TestPieChart(t *testing.T) {
 	}
 
 	b := bytes.NewBuffer([]byte{})
-	pie.Render(PNG, b)
+	err := pie.Render(PNG, b)
+	testutil.AssertNil(t, err)
 	testutil.AssertNotZero(t, b.Len())
 }
 

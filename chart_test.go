@@ -364,7 +364,8 @@ func TestChartSingleSeries(t *testing.T) {
 	}
 
 	buffer := bytes.NewBuffer([]byte{})
-	c.Render(PNG, buffer)
+	err := c.Render(PNG, buffer)
+	testutil.AssertNil(t, err)
 	testutil.AssertNotEmpty(t, buffer.Bytes())
 }
 
@@ -380,7 +381,9 @@ func TestChartRegressionBadRanges(t *testing.T) {
 		},
 	}
 	buffer := bytes.NewBuffer([]byte{})
-	c.Render(PNG, buffer)
+	err := c.Render(PNG, buffer)
+	testutil.AssertNotNil(t, err)
+	testutil.AssertEqual(t, "infinite x-range delta", err.Error(), "Should error about infinite x-delta")
 	testutil.AssertTrue(t, true, "Render needs to finish.")
 }
 
@@ -402,7 +405,9 @@ func TestChartRegressionBadRangesByUser(t *testing.T) {
 		},
 	}
 	buffer := bytes.NewBuffer([]byte{})
-	c.Render(PNG, buffer)
+	err := c.Render(PNG, buffer)
+	testutil.AssertNotNil(t, err)
+	testutil.AssertEqual(t, "infinite y-range delta", err.Error(), "Should error about infinite y-delta")
 	testutil.AssertTrue(t, true, "Render needs to finish.")
 }
 

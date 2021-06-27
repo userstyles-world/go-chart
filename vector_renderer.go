@@ -140,7 +140,7 @@ func (vr *vectorRenderer) ArcTo(cx, cy int, rx, ry, startAngle, delta float64) {
 
 // Close closes a shape.
 func (vr *vectorRenderer) Close() {
-	vr.p = append(vr.p, fmt.Sprintf("Z"))
+	vr.p = append(vr.p, "Z")
 }
 
 // Stroke draws the path with no fill.
@@ -234,6 +234,7 @@ func newCanvas(w io.Writer) *canvas {
 	}
 }
 
+// Todo Refacter w to []byte and not rely on io.Writer
 type canvas struct {
 	w         io.Writer
 	dpi       float64

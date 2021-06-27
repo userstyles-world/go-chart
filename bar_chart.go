@@ -464,7 +464,7 @@ func (bc BarChart) styleDefaultsBar(index int) Style {
 	}
 }
 
-func (bc BarChart) styleDefaultsTitle() Style {
+func (bc BarChart) StyleDefaultsTitle() Style {
 	return bc.TitleStyle.InheritFrom(Style{
 		FontColor:           bc.GetColorPalette().TextColor(),
 		Font:                bc.GetFont(),

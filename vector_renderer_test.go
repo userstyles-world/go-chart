@@ -29,7 +29,7 @@ func TestVectorRendererPath(t *testing.T) {
 	err = typed.Save(buffer)
 	testutil.AssertNil(t, err)
 
-	raw := string(buffer.Bytes())
+	raw := buffer.String()
 
 	testutil.AssertTrue(t, strings.HasPrefix(raw, "<svg"))
 	testutil.AssertTrue(t, strings.HasSuffix(raw, "</svg>"))

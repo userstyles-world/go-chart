@@ -218,7 +218,7 @@ func LegendThin(c *Chart, userDefaults ...Style) Renderable {
 
 // LegendLeft is a legend that is designed for longer series lists.
 func LegendLeft(c *Chart, userDefaults ...Style) Renderable {
-	return func(r Renderer, cb Box, chartDefaults Style) {
+	return func(r Renderer, _ Box, chartDefaults Style) {
 		legendDefaults := Style{
 			FillColor:   drawing.ColorWhite,
 			FontColor:   DefaultTextColor,

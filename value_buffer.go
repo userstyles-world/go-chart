@@ -7,7 +7,6 @@ import (
 
 const (
 	bufferMinimumGrow     = 4
-	bufferShrinkThreshold = 32
 	bufferGrowFactor      = 200
 	bufferDefaultCapacity = 4
 )
@@ -202,13 +201,6 @@ func (b *ValueBuffer) String() string {
 // --------------------------------------------------------------------------------
 // Util methods
 // --------------------------------------------------------------------------------
-
-func arrayClear(source []float64, index, length int) {
-	for x := 0; x < length; x++ {
-		absoluteIndex := x + index
-		source[absoluteIndex] = 0
-	}
-}
 
 func arrayCopy(source []float64, sourceIndex int, destination []float64, destinationIndex, length int) {
 	for x := 0; x < length; x++ {

@@ -70,7 +70,7 @@ func (rgc *RasterGraphicContext) Clear() {
 // ClearRect fills the current canvas with a default transparent color at the specified rectangle
 func (rgc *RasterGraphicContext) ClearRect(x1, y1, x2, y2 int) {
 	imageColor := image.NewUniform(rgc.current.FillColor)
-	draw.Draw(rgc.img, image.Rect(x1, y1, x2, y2), imageColor, image.ZP, draw.Over)
+	draw.Draw(rgc.img, image.Rect(x1, y1, x2, y2), imageColor, image.Point{}, draw.Over)
 }
 
 // DrawImage draws the raster image in the current canvas
