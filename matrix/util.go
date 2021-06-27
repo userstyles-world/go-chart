@@ -21,5 +21,5 @@ func f64s(v float64) string {
 }
 
 func roundToEpsilon(value, epsilon float64) float64 {
-	return math.Nextafter(value, value)
+	return math.Nextafter(value, epsilon)
 }
