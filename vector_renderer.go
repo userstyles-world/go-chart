@@ -234,7 +234,6 @@ func newCanvas(w io.Writer) *canvas {
 	}
 }
 
-// Todo Refacter w to []byte and not rely on io.Writer
 type canvas struct {
 	w         io.Writer
 	dpi       float64
@@ -248,15 +247,15 @@ type canvas struct {
 func (c *canvas) Start(width, height int) {
 	c.width = width
 	c.height = height
-	c.w.Write([]byte(fmt.Sprintf(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 %d %d" width="%d" height="%d">`+"\n", c.width, c.height, c.width, c.height)))
+	_, _ = c.w.Write([]byte(fmt.Sprintf(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 %d %d" width="%d" height="%d">`+"\n", c.width, c.height, c.width, c.height)))
 	if c.css != "" {
-		c.w.Write([]byte(`<style type="text/css"`))
+		_, _ = c.w.Write([]byte(`<style type="text/css"`))
 		if c.nonce != "" {
 			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-			c.w.Write([]byte(fmt.Sprintf(` nonce="%s"`, c.nonce)))
+			_, _ = c.w.Write([]byte(fmt.Sprintf(` nonce="%s"`, c.nonce)))
 		}
 		// To avoid compatibility issues between XML and CSS (f.e. with child selectors) we should encapsulate the CSS with CDATA.
-		c.w.Write([]byte(fmt.Sprintf(`><![CDATA[%s]]></style>`, c.css)))
+		_, _ = c.w.Write([]byte(fmt.Sprintf(`><![CDATA[%s]]></style>`, c.css)))
 	}
 }
 
@@ -265,24 +264,24 @@ func (c *canvas) Path(d string, style Style) {
 	if len(style.StrokeDashArray) > 0 {
 		strokeDashArrayProperty = c.getStrokeDashArray(style)
 	}
-	c.w.Write([]byte(fmt.Sprintf(`<path %s d="%s" %s/>`, strokeDashArrayProperty, d, c.styleAsSVG(style))))
+	_, _ = c.w.Write([]byte(fmt.Sprintf(`<path %s d="%s" %s/>`, strokeDashArrayProperty, d, c.styleAsSVG(style))))
 }
 
 func (c *canvas) Text(x, y int, body string, style Style) {
 	if c.textTheta == nil {
-		c.w.Write([]byte(fmt.Sprintf(`<text x="%d" y="%d" %s>%s</text>`, x, y, c.styleAsSVG(style), body)))
+		_, _ = c.w.Write([]byte(fmt.Sprintf(`<text x="%d" y="%d" %s>%s</text>`, x, y, c.styleAsSVG(style), body)))
 	} else {
 		transform := fmt.Sprintf(` transform="rotate(%0.2f,%d,%d)"`, RadiansToDegrees(*c.textTheta), x, y)
-		c.w.Write([]byte(fmt.Sprintf(`<text x="%d" y="%d" %s%s>%s</text>`, x, y, c.styleAsSVG(style), transform, body)))
+		_, _ = c.w.Write([]byte(fmt.Sprintf(`<text x="%d" y="%d" %s%s>%s</text>`, x, y, c.styleAsSVG(style), transform, body)))
 	}
 }
 
 func (c *canvas) Circle(x, y, r int, style Style) {
-	c.w.Write([]byte(fmt.Sprintf(`<circle cx="%d" cy="%d" r="%d" %s/>`, x, y, r, c.styleAsSVG(style))))
+	_, _ = c.w.Write([]byte(fmt.Sprintf(`<circle cx="%d" cy="%d" r="%d" %s/>`, x, y, r, c.styleAsSVG(style))))
 }
 
 func (c *canvas) End() {
-	c.w.Write([]byte("</svg>"))
+	_, _ = c.w.Write([]byte("</svg>"))
 }
 
 // getStrokeDashArray returns the stroke-dasharray property of a style.
