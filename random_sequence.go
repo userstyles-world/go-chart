@@ -23,13 +23,22 @@ func RandomValuesWithMax(count int, max float64) []float64 {
 // NewRandomSequence creates a new random seq.
 func NewRandomSequence() *RandomSeq {
 	return &RandomSeq{
-		rnd: rand.New(rand.NewSource(time.Now().Unix())),
+		rnd: rand.NewSource(time.Now().UnixNano()),
 	}
+}
+
+func randFloat64(r rand.Source) float64 {
+again:
+	f := float64(r.Int63()) / (1 << 63)
+	if f == 1 {
+		goto again // resample; this branch is taken O(never)
+	}
+	return f
 }
 
 // RandomSeq is a random number seq generator.
 type RandomSeq struct {
-	rnd *rand.Rand
+	rnd rand.Source
 	max *float64
 	min *float64
 	len *int
@@ -54,13 +63,13 @@ func (r *RandomSeq) GetValue(_ int) float64 {
 			delta = *r.min - *r.max
 		}
 
-		return *r.min + (r.rnd.Float64() * delta)
+		return *r.min + (randFloat64(r.rnd) * delta)
 	} else if r.max != nil {
-		return r.rnd.Float64() * *r.max
+		return randFloat64(r.rnd) * *r.max
 	} else if r.min != nil {
-		return *r.min + (r.rnd.Float64())
+		return *r.min + randFloat64(r.rnd)
 	}
-	return r.rnd.Float64()
+	return randFloat64(r.rnd)
 }
 
 // WithLen sets a maximum len
