@@ -38,9 +38,9 @@ func ColorFromHex(hex string) Color {
 		c.G = parseHex(string(hex[1])) * 0x11
 		c.B = parseHex(string(hex[2])) * 0x11
 	} else {
-		c.R = parseHex(string(hex[0:2]))
-		c.G = parseHex(string(hex[2:4]))
-		c.B = parseHex(string(hex[4:6]))
+		c.R = parseHex(hex[0:2])
+		c.G = parseHex(hex[2:4])
+		c.B = parseHex(hex[4:6])
 	}
 	c.A = 255
 	return c

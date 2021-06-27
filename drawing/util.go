@@ -32,7 +32,7 @@ func distance(x1, y1, x2, y2 float64) float64 {
 }
 
 func vectorDistance(dx, dy float64) float64 {
-	return float64(math.Sqrt(dx*dx + dy*dy))
+	return math.Sqrt(dx*dx + dy*dy)
 }
 
 func pointToF64Point(p truetype.Point) (x, y float64) {

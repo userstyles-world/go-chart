@@ -96,7 +96,7 @@ func (b *ValueBuffer) Clear() {
 // Enqueue adds an element to the "back" of the Buffer.
 func (b *ValueBuffer) Enqueue(value float64) {
 	if b.size == len(b.array) {
-		newCapacity := int(len(b.array) * int(bufferGrowFactor/100))
+		newCapacity := len(b.array) * (bufferGrowFactor / 100)
 		if newCapacity < (len(b.array) + bufferMinimumGrow) {
 			newCapacity = len(b.array) + bufferMinimumGrow
 		}
