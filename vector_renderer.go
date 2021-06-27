@@ -160,7 +160,7 @@ func (vr *vectorRenderer) FillStroke() {
 
 // drawPath draws a path.
 func (vr *vectorRenderer) drawPath(s Style) {
-	vr.c.Path(strings.Join(vr.p, "\n"), vr.s.GetFillAndStrokeOptions())
+	vr.c.Path(strings.Join(vr.p, "\n"), s.GetFillAndStrokeOptions())
 	vr.p = []string{} // clear the path
 }
 
