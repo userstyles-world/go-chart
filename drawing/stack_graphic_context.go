@@ -100,8 +100,8 @@ func (gc *StackGraphicContext) SetLineWidth(lineWidth float64) {
 }
 
 // SetLineCap sets the line cap.
-func (gc *StackGraphicContext) SetLineCap(cap LineCap) {
-	gc.current.Cap = cap
+func (gc *StackGraphicContext) SetLineCap(capacity LineCap) {
+	gc.current.Cap = capacity
 }
 
 // SetLineJoin sets the line join.

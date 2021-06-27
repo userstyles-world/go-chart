@@ -20,8 +20,8 @@ func (cs ConcatSeries) GetValue(index int) (x, y float64) {
 	cursor := 0
 	for _, s := range cs {
 		if typed, isValuesProvider := s.(ValuesProvider); isValuesProvider {
-			len := typed.Len()
-			if index < cursor+len {
+			typedLen := typed.Len()
+			if index < cursor+typedLen {
 				x, y = typed.GetValues(index - cursor) //FENCEPOSTS.
 				return
 			}
