@@ -191,8 +191,9 @@ func (b *ValueBuffer) Each(mapfn func(int, float64)) {
 
 // String returns a string representation for value buffers.
 func (b *ValueBuffer) String() string {
-	var values []string
-	for _, elem := range b.Array() {
+	bufferArray := b.Array()
+	values := make([]string, len(bufferArray))
+	for _, elem := range bufferArray {
 		values = append(values, fmt.Sprintf("%v", elem))
 	}
 	return strings.Join(values, " <= ")

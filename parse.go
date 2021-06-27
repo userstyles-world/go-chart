@@ -8,7 +8,7 @@ import (
 
 // ParseFloats parses a list of floats.
 func ParseFloats(values ...string) ([]float64, error) {
-	var output []float64
+	output := make([]float64, len(values))
 	var parsedValue float64
 	var err error
 	var cleaned string
@@ -27,7 +27,7 @@ func ParseFloats(values ...string) ([]float64, error) {
 
 // ParseTimes parses a list of times with a given format.
 func ParseTimes(layout string, values ...string) ([]time.Time, error) {
-	var output []time.Time
+	output := make([]time.Time, len(values))
 	var parsedValue time.Time
 	var err error
 	for _, value := range values {

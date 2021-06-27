@@ -287,7 +287,7 @@ func (c *canvas) End() {
 // getStrokeDashArray returns the stroke-dasharray property of a style.
 func (c *canvas) getStrokeDashArray(s Style) string {
 	if len(s.StrokeDashArray) > 0 {
-		var values []string
+		values := make([]string, len(s.StrokeDashArray))
 		for _, v := range s.StrokeDashArray {
 			values = append(values, fmt.Sprintf("%0.1f", v))
 		}
