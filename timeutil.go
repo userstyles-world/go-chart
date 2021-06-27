@@ -1,6 +1,8 @@
 package chart
 
-import "time"
+import (
+	"time"
+)
 
 // SecondsPerXYZ
 const (
@@ -13,17 +15,18 @@ func TimeMillis(d time.Duration) float64 {
 	return float64(d) / float64(time.Millisecond)
 }
 
+func AbsWithBranch(n int64) int64 {
+	if n < 0 {
+		return -n
+	}
+	return n
+}
+
 // DiffHours returns the difference in hours between two times.
 func DiffHours(t1, t2 time.Time) (hours int) {
-	t1n := t1.Unix()
-	t2n := t2.Unix()
-	var diff int64
-	if t1n > t2n {
-		diff = t1n - t2n
-	} else {
-		diff = t2n - t1n
-	}
-	return int(diff / (SecondsPerHour))
+	diff := t1.Unix() - t2.Unix()
+
+	return int(AbsWithBranch(diff) / SecondsPerHour)
 }
 
 // TimeMin returns the minimum and maximum times in a given range.

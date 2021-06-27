@@ -229,9 +229,8 @@ func RoundPlaces(input float64, places int) (rounded float64) {
 
 	precision := math.Pow(10, float64(places))
 	digit := input * precision
-	_, decimal := math.Modf(digit)
 
-	if decimal >= 0.5 {
+	if _, decimal := math.Modf(digit); decimal >= 0.5 {
 		rounded = math.Ceil(digit)
 	} else {
 		rounded = math.Floor(digit)

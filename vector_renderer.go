@@ -310,7 +310,6 @@ func (c *canvas) getFontFace(s Style) string {
 
 // styleAsSVG returns the style as a svg style or class string.
 func (c *canvas) styleAsSVG(s Style) string {
-	sw := s.StrokeWidth
 	sc := s.StrokeColor
 	fc := s.FillColor
 	fs := s.FontSize
@@ -334,7 +333,7 @@ func (c *canvas) styleAsSVG(s Style) string {
 
 	var pieces []string
 
-	if sw != 0 {
+	if sw := s.StrokeWidth; sw != 0 {
 		pieces = append(pieces, "stroke-width:"+fmt.Sprintf("%d", int(sw)))
 	} else {
 		pieces = append(pieces, "stroke-width:0")

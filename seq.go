@@ -248,13 +248,12 @@ func (s Seq) Percentile(percent float64) (percentile float64) {
 
 	sorted := s.Sort()
 	index := percent * float64(l)
+	i := f64i(index)
 	if index == float64(int64(index)) {
-		i := f64i(index)
 		ci := sorted.GetValue(i - 1)
 		c := sorted.GetValue(i)
 		percentile = (ci + c) / 2.0
 	} else {
-		i := f64i(index)
 		percentile = sorted.GetValue(i)
 	}
 

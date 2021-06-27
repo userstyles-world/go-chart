@@ -326,9 +326,8 @@ func (m *Matrix) Equals(other *Matrix) bool {
 	}
 
 	msize := len(m.elements)
-	m2size := len(other.elements)
 
-	if msize != m2size {
+	if msize != len(other.elements) {
 		return false
 	}
 

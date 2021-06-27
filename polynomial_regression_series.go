@@ -78,8 +78,7 @@ func (prs *PolynomialRegressionSeries) Validate() error {
 		return fmt.Errorf("linear regression series requires InnerSeries to be set")
 	}
 
-	endIndex := prs.GetEndIndex()
-	if endIndex >= prs.InnerSeries.Len() {
+	if endIndex := prs.GetEndIndex(); endIndex >= prs.InnerSeries.Len() {
 		return fmt.Errorf("invalid window; inner series has length %d but end index is %d", prs.InnerSeries.Len(), endIndex)
 	}
 
