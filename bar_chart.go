@@ -289,7 +289,6 @@ func (bc BarChart) drawYAxis(r Renderer, canvasBox Box, yr Range, ticks []Tick) 
 			tb = r.MeasureText(t.Label)
 			Draw.Text(r, t.Label, canvasBox.Right+DefaultYAxisMargin+5, ty+(tb.Height()>>1), axisStyle)
 		}
-
 	}
 }
 

@@ -36,7 +36,6 @@ func TimeMin(times ...time.Time) (min time.Time) {
 		if times[index].Before(min) {
 			min = times[index]
 		}
-
 	}
 	return
 }

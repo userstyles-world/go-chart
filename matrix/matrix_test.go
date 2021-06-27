@@ -140,12 +140,10 @@ func TestMatrixIsSymmetric(t *testing.T) {
 		{2, 1, 2},
 		{3, 2, 1},
 	}).IsSymmetric())
-
 }
 
 func TestMatrixGet(t *testing.T) {
 	// replaced new assertions helper
-
 	m := NewFromArrays([][]float64{
 		{1, 2, 3},
 		{4, 5, 6},

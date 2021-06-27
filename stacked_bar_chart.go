@@ -271,7 +271,6 @@ func (sbc StackedBarChart) drawXAxis(r Renderer, canvasBox Box) {
 
 		cursor := canvasBox.Left
 		for _, bar := range sbc.Bars {
-
 			barLabelBox := Box{
 				Top:    canvasBox.Bottom + DefaultXAxisMargin,
 				Left:   cursor,
@@ -471,7 +470,6 @@ func (sbc StackedBarChart) getAdjustedCanvasBox(r Renderer, canvasBox Box) Box {
 		Right:  canvasBox.Left + totalWidth,
 		Bottom: canvasBox.Bottom,
 	}
-
 }
 
 func (sbc StackedBarChart) getHorizontalAdjustedCanvasBox(r Renderer, canvasBox Box) Box {

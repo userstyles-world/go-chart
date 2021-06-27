@@ -516,12 +516,9 @@ func (m *Matrix) QR() (q, r *Matrix) {
 						r.Set(i, j, qr.Get(i, j))
 					}
 				}
-
 			}
 		}
-
 		r.Set(k, k, -norm)
-
 	}
 
 	for k = cols - 1; k >= 0; k-- {
