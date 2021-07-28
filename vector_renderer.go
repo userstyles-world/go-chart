@@ -285,7 +285,7 @@ func (c *canvas) End() {
 }
 
 // getStrokeDashArray returns the stroke-dasharray property of a style.
-func (c *canvas) getStrokeDashArray(s Style) string {
+func (*canvas) getStrokeDashArray(s Style) string {
 	if len(s.StrokeDashArray) > 0 {
 		values := make([]string, 0, len(s.StrokeDashArray))
 		for _, v := range s.StrokeDashArray {
@@ -297,7 +297,7 @@ func (c *canvas) getStrokeDashArray(s Style) string {
 }
 
 // GetFontFace returns the font face for the style.
-func (c *canvas) getFontFace(s Style) string {
+func (*canvas) getFontFace(s Style) string {
 	family := "sans-serif"
 	if s.GetFont() != nil {
 		name := s.GetFont().Name(truetype.NameIDFontFamily)

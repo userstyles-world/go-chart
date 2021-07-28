@@ -1,8 +1,6 @@
 package chart
 
-import (
-	"strings"
-)
+import "strings"
 
 // TextHorizontalAlign is an enum for the horizontal alignment options.
 type TextHorizontalAlign int
@@ -87,7 +85,7 @@ func (t text) WrapFitWord(r Renderer, value string, width int, style Style) []st
 
 	for _, c := range value {
 		if c == rune('\n') { // commit the line to output
-			output = append(output, t.Trim(line+word))
+			output = append(output, t.trim(line+word))
 			line = ""
 			word = ""
 			continue
@@ -96,7 +94,7 @@ func (t text) WrapFitWord(r Renderer, value string, width int, style Style) []st
 		textBox = r.MeasureText(line + word + string(c))
 
 		if textBox.Width() >= width {
-			output = append(output, t.Trim(line))
+			output = append(output, t.trim(line))
 			line = word
 			word = string(c)
 			continue
@@ -110,7 +108,7 @@ func (t text) WrapFitWord(r Renderer, value string, width int, style Style) []st
 		word += string(c)
 	}
 
-	return append(output, t.Trim(line+word))
+	return append(output, t.trim(line+word))
 }
 
 func (t text) WrapFitRune(r Renderer, value string, width int, style Style) []string {
@@ -138,11 +136,11 @@ func (t text) WrapFitRune(r Renderer, value string, width int, style Style) []st
 	return t.appendLast(output, line)
 }
 
-func (t text) Trim(value string) string {
+func (text) trim(value string) string {
 	return strings.Trim(value, " \t\n\r")
 }
 
-func (t text) MeasureLines(r Renderer, lines []string, style Style) Box {
+func (text) MeasureLines(r Renderer, lines []string, style Style) Box {
 	style.WriteTextOptionsToRenderer(r)
 	var output Box
 	for index, line := range lines {
@@ -156,7 +154,7 @@ func (t text) MeasureLines(r Renderer, lines []string, style Style) Box {
 	return output
 }
 
-func (t text) appendLast(lines []string, text string) []string {
+func (text) appendLast(lines []string, text string) []string {
 	if len(lines) == 0 {
 		return []string{text}
 	}

@@ -2,7 +2,6 @@ package chart
 
 import (
 	"errors"
-	"fmt"
 	"io"
 
 	"github.com/golang/freetype/truetype"
@@ -91,7 +90,7 @@ func (pc DonutChart) Render(rp RendererProvider, w io.Writer) error {
 	pc.drawBackground(r)
 	pc.drawCanvas(r, canvasBox)
 
-	finalValues, err := pc.finalizeValues(pc.Values)
+	finalValues, err := finalizeValues(pc.Values)
 	if err != nil {
 		return err
 	}
@@ -182,19 +181,11 @@ func (pc DonutChart) drawSlices(r Renderer, canvasBox Box, values []Value) {
 	}
 }
 
-func (pc DonutChart) finalizeValues(values []Value) ([]Value, error) {
-	finalValues := Values(values).Normalize()
-	if len(finalValues) == 0 {
-		return nil, fmt.Errorf("donut chart must contain at least (1) non-zero value")
-	}
-	return finalValues, nil
-}
-
 func (pc DonutChart) getDefaultCanvasBox() Box {
 	return pc.Box()
 }
 
-func (pc DonutChart) getCircleAdjustedCanvasBox(canvasBox Box) Box {
+func (DonutChart) getCircleAdjustedCanvasBox(canvasBox Box) Box {
 	circleDiameter := MinInt(canvasBox.Width(), canvasBox.Height())
 
 	square := Box{

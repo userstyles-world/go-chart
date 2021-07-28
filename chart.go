@@ -105,7 +105,7 @@ func (c Chart) Render(rp RendererProvider, w io.Writer) error {
 
 	Debugf(c.Log, "chart; canvas box: %v", canvasBox)
 
-	xr, yr, yra = c.setRangeDomains(canvasBox, xr, yr, yra)
+	xr, yr, yra = setRangeDomains(canvasBox, xr, yr, yra)
 
 	err = c.checkRanges(xr, yr, yra)
 	if err != nil {
@@ -116,19 +116,19 @@ func (c Chart) Render(rp RendererProvider, w io.Writer) error {
 	if c.hasAxes() {
 		xt, yt, yta = c.getAxesTicks(r, xr, yr, yra, xf, yf, yfa)
 		canvasBox = c.getAxesAdjustedCanvasBox(r, canvasBox, xr, yr, yra, xt, yt, yta)
-		xr, yr, yra = c.setRangeDomains(canvasBox, xr, yr, yra)
+		xr, yr, yra = setRangeDomains(canvasBox, xr, yr, yra)
 
 		Debugf(c.Log, "chart; axes adjusted canvas box: %v", canvasBox)
 
 		// do a second pass in case things haven't settled yet.
 		xt, yt, yta = c.getAxesTicks(r, xr, yr, yra, xf, yf, yfa)
 		canvasBox = c.getAxesAdjustedCanvasBox(r, canvasBox, xr, yr, yra, xt, yt, yta)
-		xr, yr, yra = c.setRangeDomains(canvasBox, xr, yr, yra)
+		xr, yr, yra = setRangeDomains(canvasBox, xr, yr, yra)
 	}
 
 	if c.hasAnnotationSeries() {
 		canvasBox = c.getAnnotationAdjustedCanvasBox(r, canvasBox, xr, yr, yra)
-		xr, yr, yra = c.setRangeDomains(canvasBox, xr, yr, yra)
+		xr, yr, yra = setRangeDomains(canvasBox, xr, yr, yra)
 		xt, yt, yta = c.getAxesTicks(r, xr, yr, yra, xf, yf, yfa)
 
 		Debugf(c.Log, "chart; annotation adjusted canvas box: %v", canvasBox)
@@ -405,7 +405,7 @@ func (c Chart) getAxesAdjustedCanvasBox(r Renderer, canvasBox Box, xr, yr, yra R
 	return canvasBox.OuterConstrain(c.Box(), axesOuterBox)
 }
 
-func (c Chart) setRangeDomains(canvasBox Box, xr, yr, yra Range) (x, y, yAlt Range) {
+func setRangeDomains(canvasBox Box, xr, yr, yra Range) (x, y, yAlt Range) {
 	xr.SetDomain(canvasBox.Width())
 	yr.SetDomain(canvasBox.Height())
 	yra.SetDomain(canvasBox.Height())

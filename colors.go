@@ -122,31 +122,31 @@ var DefaultColorPalette defaultColorPalette
 
 type defaultColorPalette struct{}
 
-func (dp defaultColorPalette) BackgroundColor() drawing.Color {
+func (defaultColorPalette) BackgroundColor() drawing.Color {
 	return DefaultBackgroundColor
 }
 
-func (dp defaultColorPalette) BackgroundStrokeColor() drawing.Color {
+func (defaultColorPalette) BackgroundStrokeColor() drawing.Color {
 	return DefaultBackgroundStrokeColor
 }
 
-func (dp defaultColorPalette) CanvasColor() drawing.Color {
+func (defaultColorPalette) CanvasColor() drawing.Color {
 	return DefaultCanvasColor
 }
 
-func (dp defaultColorPalette) CanvasStrokeColor() drawing.Color {
+func (defaultColorPalette) CanvasStrokeColor() drawing.Color {
 	return DefaultCanvasStrokeColor
 }
 
-func (dp defaultColorPalette) AxisStrokeColor() drawing.Color {
+func (defaultColorPalette) AxisStrokeColor() drawing.Color {
 	return DefaultAxisColor
 }
 
-func (dp defaultColorPalette) TextColor() drawing.Color {
+func (defaultColorPalette) TextColor() drawing.Color {
 	return DefaultTextColor
 }
 
-func (dp defaultColorPalette) GetSeriesColor(index int) drawing.Color {
+func (defaultColorPalette) GetSeriesColor(index int) drawing.Color {
 	return GetDefaultColor(index)
 }
 
@@ -155,30 +155,30 @@ var AlternateColorPalette alternateColorPalette
 
 type alternateColorPalette struct{}
 
-func (ap alternateColorPalette) BackgroundColor() drawing.Color {
+func (alternateColorPalette) BackgroundColor() drawing.Color {
 	return DefaultBackgroundColor
 }
 
-func (ap alternateColorPalette) BackgroundStrokeColor() drawing.Color {
+func (alternateColorPalette) BackgroundStrokeColor() drawing.Color {
 	return DefaultBackgroundStrokeColor
 }
 
-func (ap alternateColorPalette) CanvasColor() drawing.Color {
+func (alternateColorPalette) CanvasColor() drawing.Color {
 	return DefaultCanvasColor
 }
 
-func (ap alternateColorPalette) CanvasStrokeColor() drawing.Color {
+func (alternateColorPalette) CanvasStrokeColor() drawing.Color {
 	return DefaultCanvasStrokeColor
 }
 
-func (ap alternateColorPalette) AxisStrokeColor() drawing.Color {
+func (alternateColorPalette) AxisStrokeColor() drawing.Color {
 	return DefaultAxisColor
 }
 
-func (ap alternateColorPalette) TextColor() drawing.Color {
+func (alternateColorPalette) TextColor() drawing.Color {
 	return DefaultTextColor
 }
 
-func (ap alternateColorPalette) GetSeriesColor(index int) drawing.Color {
+func (alternateColorPalette) GetSeriesColor(index int) drawing.Color {
 	return GetAlternateColor(index)
 }

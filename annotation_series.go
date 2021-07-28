@@ -33,7 +33,7 @@ func (as AnnotationSeries) GetYAxis() YAxisType {
 	return as.YAxis
 }
 
-func (as AnnotationSeries) annotationStyleDefaults(defaults Style) Style {
+func (AnnotationSeries) annotationStyleDefaults(defaults Style) Style {
 	return Style{
 		FontColor:   DefaultTextColor,
 		Font:        defaults.Font,

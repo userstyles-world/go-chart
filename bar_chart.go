@@ -327,7 +327,7 @@ func (bc BarChart) hasAxes() bool {
 	return !bc.YAxis.Style.Hidden
 }
 
-func (bc BarChart) setRangeDomains(canvasBox Box, yr Range) Range {
+func (BarChart) setRangeDomains(canvasBox Box, yr Range) Range {
 	yr.SetDomain(canvasBox.Height())
 	return yr
 }
