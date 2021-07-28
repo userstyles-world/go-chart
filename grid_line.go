@@ -22,6 +22,26 @@ func (gl GridLine) Minor() bool {
 	return gl.IsMinor
 }
 
+func (gl GridLine) renderVertical(r Renderer, canvasBox Box, ra Range) {
+	lineLeft := canvasBox.Left + ra.Translate(gl.Value)
+	lineBottom := canvasBox.Bottom
+	lineTop := canvasBox.Top
+
+	r.MoveTo(lineLeft, lineBottom)
+	r.LineTo(lineLeft, lineTop)
+	r.Stroke()
+}
+
+func (gl GridLine) renderHorizontal(r Renderer, canvasBox Box, ra Range) {
+	lineLeft := canvasBox.Left
+	lineRight := canvasBox.Right
+	lineHeight := canvasBox.Bottom - ra.Translate(gl.Value)
+
+	r.MoveTo(lineLeft, lineHeight)
+	r.LineTo(lineRight, lineHeight)
+	r.Stroke()
+}
+
 // Render renders the gridline
 func (gl GridLine) Render(r Renderer, canvasBox Box, ra Range, isVertical bool, defaults Style) {
 	r.SetStrokeColor(gl.Style.GetStrokeColor(defaults.GetStrokeColor()))
@@ -29,21 +49,9 @@ func (gl GridLine) Render(r Renderer, canvasBox Box, ra Range, isVertical bool, 
 	r.SetStrokeDashArray(gl.Style.GetStrokeDashArray(defaults.GetStrokeDashArray()))
 
 	if isVertical {
-		lineLeft := canvasBox.Left + ra.Translate(gl.Value)
-		lineBottom := canvasBox.Bottom
-		lineTop := canvasBox.Top
-
-		r.MoveTo(lineLeft, lineBottom)
-		r.LineTo(lineLeft, lineTop)
-		r.Stroke()
+		gl.renderVertical(r, canvasBox, ra)
 	} else {
-		lineLeft := canvasBox.Left
-		lineRight := canvasBox.Right
-		lineHeight := canvasBox.Bottom - ra.Translate(gl.Value)
-
-		r.MoveTo(lineLeft, lineHeight)
-		r.LineTo(lineRight, lineHeight)
-		r.Stroke()
+		gl.renderHorizontal(r, canvasBox, ra)
 	}
 }
 
