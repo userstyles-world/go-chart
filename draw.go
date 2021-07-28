@@ -176,10 +176,10 @@ func (d draw) MeasureAnnotation(r Renderer, canvasBox Box, style Style, lx, ly i
 	textHeight := textBox.Height()
 	halfTextHeight := textHeight >> 1
 
-	pt := style.Padding.GetTop(DefaultAnnotationPadding.Top)
-	pl := style.Padding.GetLeft(DefaultAnnotationPadding.Left)
-	pr := style.Padding.GetRight(DefaultAnnotationPadding.Right)
-	pb := style.Padding.GetBottom(DefaultAnnotationPadding.Bottom)
+	pt := style.Padding.GetTop(canvasBox.Top)
+	pl := style.Padding.GetLeft(canvasBox.Left)
+	pr := style.Padding.GetRight(canvasBox.Right)
+	pb := style.Padding.GetBottom(canvasBox.Bottom)
 
 	strokeWidth := style.GetStrokeWidth()
 
@@ -206,10 +206,10 @@ func (d draw) Annotation(r Renderer, canvasBox Box, style Style, lx, ly int, lab
 
 	style.GetFillAndStrokeOptions().WriteToRenderer(r)
 
-	pt := style.Padding.GetTop(DefaultAnnotationPadding.Top)
-	pl := style.Padding.GetLeft(DefaultAnnotationPadding.Left)
-	pr := style.Padding.GetRight(DefaultAnnotationPadding.Right)
-	pb := style.Padding.GetBottom(DefaultAnnotationPadding.Bottom)
+	pt := style.Padding.GetTop(canvasBox.Top)
+	pl := style.Padding.GetLeft(canvasBox.Left)
+	pr := style.Padding.GetRight(canvasBox.Right)
+	pb := style.Padding.GetBottom(canvasBox.Bottom)
 
 	textX := lx + pl + DefaultAnnotationDeltaWidth
 	textY := ly + halfTextHeight
