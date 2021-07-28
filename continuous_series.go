@@ -39,17 +39,17 @@ func (cs ContinuousSeries) Len() int {
 }
 
 // GetValues gets the x,y values at a given index.
-func (cs ContinuousSeries) GetValues(index int) (float64, float64) {
+func (cs ContinuousSeries) GetValues(index int) (x, y float64) {
 	return cs.XValues[index], cs.YValues[index]
 }
 
 // GetFirstValues gets the first x,y values.
-func (cs ContinuousSeries) GetFirstValues() (float64, float64) {
+func (cs ContinuousSeries) GetFirstValues() (x, y float64) {
 	return cs.XValues[0], cs.YValues[0]
 }
 
 // GetLastValues gets the last x,y values.
-func (cs ContinuousSeries) GetLastValues() (float64, float64) {
+func (cs ContinuousSeries) GetLastValues() (x, y float64) {
 	return cs.XValues[len(cs.XValues)-1], cs.YValues[len(cs.YValues)-1]
 }
 

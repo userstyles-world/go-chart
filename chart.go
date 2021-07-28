@@ -405,7 +405,7 @@ func (c Chart) getAxesAdjustedCanvasBox(r Renderer, canvasBox Box, xr, yr, yra R
 	return canvasBox.OuterConstrain(c.Box(), axesOuterBox)
 }
 
-func (c Chart) setRangeDomains(canvasBox Box, xr, yr, yra Range) (Range, Range, Range) {
+func (c Chart) setRangeDomains(canvasBox Box, xr, yr, yra Range) (x, y, yAlt Range) {
 	xr.SetDomain(canvasBox.Width())
 	yr.SetDomain(canvasBox.Height())
 	yra.SetDomain(canvasBox.Height())
