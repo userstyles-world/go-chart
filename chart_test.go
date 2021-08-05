@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/png"
 	"math"
+	"regexp"
 	"testing"
 	"time"
 
@@ -606,6 +607,33 @@ func TestChartEmptyGrid(t *testing.T) {
 	// check the grid is not drawn
 	// Should match: <path d="M 38 -9223372036854775457 L 1185 -9223372036854775457" style="stroke-width:0;stroke:none;fill:none"/>
 	re := regexp.MustCompile(`<path d=\"[^"]*\" ?style="stroke-width:0;stroke:none;fill:none" ?(\/>| ?<\/path>)`)
+	matches := re.FindAllString(buffer.String(), -1)
+	testutil.AssertEqual(t, 0, len(matches))
+}
+
+// Regression: go-charts shouldn't render paths with multiple spaces in the path.
+func TestChartDoubleSpace(t *testing.T) {
+	t.Parallel()
+
+	c := Chart{
+		Width:      1248,
+		Canvas:     Style{ClassName: "bg inner"},
+		Background: Style{ClassName: "bg outer"},
+		XAxis:      XAxis{Name: "Date"},
+		YAxis:      YAxis{Name: "Daily count"},
+		Series: []Series{
+			TimeSeries{
+				Name:    "goog",
+				XValues: []time.Time{time.Now(), time.Now().AddDate(0, 0, -1)},
+				YValues: []float64{1.0, 2.0},
+			},
+		},
+	}
+	var buffer = &bytes.Buffer{}
+	err := c.Render(SVG, buffer)
+	testutil.AssertNil(t, err)
+
+	re := regexp.MustCompile(` {2,}`)
 	matches := re.FindAllString(buffer.String(), -1)
 	testutil.AssertEqual(t, 0, len(matches))
 }

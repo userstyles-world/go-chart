@@ -260,11 +260,10 @@ func (c *canvas) Start(width, height int) {
 }
 
 func (c *canvas) Path(d string, style Style) {
-	var strokeDashArrayProperty string
 	if len(style.StrokeDashArray) > 0 {
-		strokeDashArrayProperty = c.getStrokeDashArray(style)
+		_, _ = c.w.Write([]byte(fmt.Sprintf(`<path %s d="%s" %s/>`, c.getStrokeDashArray(style), d, c.styleAsSVG(style))))
 	}
-	_, _ = c.w.Write([]byte(fmt.Sprintf(`<path %s d="%s" %s/>`, strokeDashArrayProperty, d, c.styleAsSVG(style))))
+	_, _ = c.w.Write([]byte(fmt.Sprintf(`<path d="%s" %s/>`, d, c.styleAsSVG(style))))
 }
 
 func (c *canvas) Text(x, y int, body string, style Style) {
