@@ -2,6 +2,8 @@ package chart
 
 import (
 	"math"
+
+	"github.com/userstyles-world/go-chart/v2/drawing"
 )
 
 // HideXAxis hides the x-axis.
@@ -191,12 +193,29 @@ func (xa XAxis) Render(r Renderer, canvasBox Box, ra Range, defaults Style, tick
 	}
 
 	if !xa.GridMajorStyle.Hidden || !xa.GridMinorStyle.Hidden {
+		isMinorDefault := xa.GridMinorStyle.StrokeColor == drawing.Color{}
+		isMajorDefault := xa.GridMajorStyle.StrokeColor == drawing.Color{}
+		// If the grid style is not set, then skip it.
+		if isMinorDefault && isMajorDefault {
+			return
+		}
+
 		for _, gl := range xa.GetGridLines(ticks) {
 			if (gl.IsMinor && !xa.GridMinorStyle.Hidden) || (!gl.IsMinor && !xa.GridMajorStyle.Hidden) {
-				defaults := xa.GridMajorStyle
+				var defaults Style
+
 				if gl.IsMinor {
+					if isMinorDefault {
+						break
+					}
 					defaults = xa.GridMinorStyle
+				} else {
+					if isMajorDefault {
+						break
+					}
+					defaults = xa.GridMajorStyle
 				}
+
 				gl.Render(r, canvasBox, ra, true, gl.Style.InheritFrom(defaults))
 			}
 		}

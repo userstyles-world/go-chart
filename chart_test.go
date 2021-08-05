@@ -578,3 +578,34 @@ func TestChartE2ELineWithFill(t *testing.T) {
 	testutil.AssertEqual(t, defaultSeriesColor, at(i, 0, 49))
 	testutil.AssertEqual(t, defaultSeriesColor, at(i, 49, 0))
 }
+
+// Regression: check when the XAsis has no majorGrid or minorGrid.
+// It should not draw the grid.
+func TestChartEmptyGrid(t *testing.T) {
+	now := time.Now()
+
+	c := Chart{
+		Width:      1248,
+		Canvas:     Style{ClassName: "bg inner"},
+		Background: Style{ClassName: "bg outer"},
+		XAxis:      XAxis{Name: "Date"},
+		YAxis:      YAxis{Name: "Daily count"},
+		Series: []Series{
+			TimeSeries{
+				Name:    "goog",
+				XValues: []time.Time{now.AddDate(0, 0, -3), now.AddDate(0, 0, -2), now.AddDate(0, 0, -1)},
+				YValues: []float64{1.0, 2.0, 3.0},
+			},
+		},
+	}
+
+	var buffer = &bytes.Buffer{}
+	err := c.Render(SVG, buffer)
+	testutil.AssertNil(t, err)
+
+	// check the grid is not drawn
+	// Should match: <path d="M 38 -9223372036854775457 L 1185 -9223372036854775457" style="stroke-width:0;stroke:none;fill:none"/>
+	re := regexp.MustCompile(`<path d=\"[^"]*\" ?style="stroke-width:0;stroke:none;fill:none" ?(\/>| ?<\/path>)`)
+	matches := re.FindAllString(buffer.String(), -1)
+	testutil.AssertEqual(t, 0, len(matches))
+}

@@ -2,6 +2,8 @@ package chart
 
 import (
 	"math"
+
+	"github.com/userstyles-world/go-chart/v2/drawing"
 )
 
 // HideYAxis hides a y-axis.
@@ -18,8 +20,6 @@ type YAxis struct {
 	NameStyle Style
 
 	Style Style
-
-	Zero GridLine
 
 	AxisType  YAxisType
 	Ascending bool
@@ -216,17 +216,29 @@ func (ya YAxis) Render(r Renderer, canvasBox Box, ra Range, defaults Style, tick
 		Draw.Text(r, ya.Name, tx, ty, nameStyle)
 	}
 
-	if !ya.Zero.Style.Hidden {
-		ya.Zero.Render(r, canvasBox, ra, false, Style{})
-	}
-
 	if !ya.GridMajorStyle.Hidden || !ya.GridMinorStyle.Hidden {
+		isMinorDefault := ya.GridMinorStyle.StrokeColor == drawing.Color{}
+		isMajorDefault := ya.GridMajorStyle.StrokeColor == drawing.Color{}
+		// If the grid style is not set, then skip it.
+		if isMinorDefault && isMajorDefault {
+			return
+		}
 		for _, gl := range ya.GetGridLines(ticks) {
 			if (gl.IsMinor && !ya.GridMinorStyle.Hidden) || (!gl.IsMinor && !ya.GridMajorStyle.Hidden) {
-				defaults := ya.GridMajorStyle
+				var defaults Style
+
 				if gl.IsMinor {
+					if isMinorDefault {
+						break
+					}
 					defaults = ya.GridMinorStyle
+				} else {
+					if isMajorDefault {
+						break
+					}
+					defaults = ya.GridMajorStyle
 				}
+
 				gl.Render(r, canvasBox, ra, false, gl.Style.InheritFrom(defaults))
 			}
 		}
