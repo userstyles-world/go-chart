@@ -473,13 +473,13 @@ func (c Chart) drawCanvas(r Renderer, canvasBox Box) {
 }
 
 func (c Chart) drawAxes(r Renderer, canvasBox Box, xrange, yrange, yrangeAlt Range, xticks, yticks, yticksAlt []Tick) {
-	if !c.XAxis.Style.Hidden {
+	if !c.XAxis.Style.Hidden && xrange.GetMin() != xrange.GetMax() {
 		c.XAxis.Render(r, canvasBox, xrange, c.styleDefaultsAxes(), xticks)
 	}
-	if !c.YAxis.Style.Hidden {
+	if !c.YAxis.Style.Hidden && yrange.GetMin() != yrange.GetMax() {
 		c.YAxis.Render(r, canvasBox, yrange, c.styleDefaultsAxes(), yticks)
 	}
-	if !c.YAxisSecondary.Style.Hidden {
+	if !c.YAxisSecondary.Style.Hidden && yrangeAlt.GetMin() != yrangeAlt.GetMax() {
 		c.YAxisSecondary.Render(r, canvasBox, yrangeAlt, c.styleDefaultsAxes(), yticksAlt)
 	}
 }

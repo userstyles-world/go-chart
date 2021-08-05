@@ -637,3 +637,33 @@ func TestChartDoubleSpace(t *testing.T) {
 	matches := re.FindAllString(buffer.String(), -1)
 	testutil.AssertEqual(t, 0, len(matches))
 }
+
+// Regression: check if their are no <text> with negative x or y values
+func TestChartTextValues(t *testing.T) {
+	now := time.Now()
+
+	c := Chart{
+		Width:      1248,
+		Canvas:     Style{ClassName: "bg inner"},
+		Background: Style{ClassName: "bg outer"},
+		XAxis:      XAxis{Name: "Date"},
+		YAxis:      YAxis{Name: "Daily count"},
+		Series: []Series{
+			TimeSeries{
+				Name:    "goog",
+				XValues: []time.Time{now.AddDate(0, 0, -3), now.AddDate(0, 0, -2), now.AddDate(0, 0, -1)},
+				YValues: []float64{1.0, 2.0, 3.0},
+			},
+		},
+	}
+
+	var buffer = &bytes.Buffer{}
+	err := c.Render(SVG, buffer)
+	testutil.AssertNil(t, err)
+
+	// check there are no negative values in the text
+	// x="-9" y="-9"
+	re := regexp.MustCompile(`(x="|y=")-\d+"`)
+	matches := re.FindAllString(buffer.String(), -1)
+	testutil.AssertEqual(t, 0, len(matches))
+}
