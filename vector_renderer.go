@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"strconv"
 	"strings"
 
 	"golang.org/x/image/font"
+	"golang.org/x/image/math/fixed"
 
 	"github.com/golang/freetype/truetype"
 	"github.com/userstyles-world/go-chart/v2/drawing"
@@ -53,7 +55,7 @@ type vectorRenderer struct {
 	c   *canvas
 	s   *Style
 	p   []string
-	fc  *font.Drawer
+	fc  font.Face
 }
 
 func (vr *vectorRenderer) ResetStyle() {
@@ -189,16 +191,64 @@ func (vr *vectorRenderer) Text(body string, x, y int) {
 	vr.c.Text(x, y, body, vr.s.GetTextOptions())
 }
 
+type runeCache map[rune]fixed.Int26_6
+
+var (
+	fontCache  = map[string]font.Face{}
+	fontToRune = map[string]runeCache{}
+)
+
+// Implement a caching measureString
+func measureString(str, fontName string, font font.Face) fixed.Int26_6 {
+	cache := fontToRune[fontName]
+	if cache == nil {
+		cache = make(runeCache)
+	}
+	prevC := rune(-1)
+	var advance fixed.Int26_6
+	for _, c := range str {
+		if prevC >= 0 {
+			advance += font.Kern(prevC, c)
+		}
+		var a fixed.Int26_6
+		if res, ok := cache[c]; ok {
+			a = res
+		} else {
+			a, ok = font.GlyphAdvance(c)
+			if !ok {
+				// TODO: is falling back on the U+FFFD glyph the responsibility of
+				// the Drawer or the Face?
+				// TODO: set prevC = '\ufffd'?
+				continue
+			}
+			cache[c] = a
+		}
+		advance += a
+		prevC = c
+	}
+	fontToRune[fontName] = cache
+	return advance
+}
+
 // MeasureText uses the truetype font drawer to measure the width of text.
 func (vr *vectorRenderer) MeasureText(body string) (box Box) {
 	if vr.s.GetFont() != nil {
-		vr.fc = &font.Drawer{
-			Face: truetype.NewFace(vr.s.GetFont(), &truetype.Options{
-				DPI:  vr.dpi,
-				Size: vr.s.FontSize,
-			}),
+		fontName := vr.s.GetFont().Name(truetype.NameIDFontFamily)
+		cacheName := fontName + strconv.FormatInt(int64(vr.dpi), 10) + strconv.FormatInt(int64(vr.s.FontSize), 10)
+		if vr.fc == nil {
+			if f, ok := fontCache[cacheName]; ok {
+				vr.fc = f
+			} else {
+				newFace := truetype.NewFace(vr.s.GetFont(), &truetype.Options{
+					DPI:  vr.dpi,
+					Size: vr.s.FontSize,
+				})
+				vr.fc = newFace
+				fontCache[cacheName] = newFace
+			}
+
 		}
-		w := vr.fc.MeasureString(body).Ceil()
+		w := measureString(body, fontName, vr.fc).Ceil()
 
 		box.Right = w
 		box.Bottom = int(drawing.PointsToPixels(vr.dpi, vr.s.FontSize))
