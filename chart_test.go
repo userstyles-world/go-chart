@@ -667,3 +667,29 @@ func TestChartTextValues(t *testing.T) {
 	matches := re.FindAllString(buffer.String(), -1)
 	testutil.AssertEqual(t, 0, len(matches))
 }
+
+func BenchmarkBarChartLegend(b *testing.B) {
+	c := Chart{
+		Width:      1248,
+		Height:     400,
+		Canvas:     Style{ClassName: "bg inner"},
+		Background: Style{ClassName: "bg outer"},
+		XAxis:      XAxis{Name: "Date"},
+		YAxis:      YAxis{Name: "Daily count"},
+		Series: []Series{
+			TimeSeries{
+				Name:    "goog",
+				XValues: []time.Time{time.Now(), time.Now().AddDate(0, 0, -1)},
+				YValues: []float64{1.0, 2.0},
+			},
+		},
+	}
+
+	c.Elements = []Renderable{Legend(&c)}
+
+	b.ResetTimer()
+	var buffer bytes.Buffer
+	for i := 0; i < b.N; i++ {
+		_ = c.Render(SVG, &buffer)
+	}
+}
