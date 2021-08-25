@@ -1,7 +1,5 @@
 package chart
 
-import "fmt"
-
 // Value is a chart value.
 type Value struct {
 	Style Style
@@ -52,12 +50,4 @@ type Value2 struct {
 	Style          Style
 	Label          string
 	XValue, YValue float64
-}
-
-func finalizeValues(values []Value) ([]Value, error) {
-	finalValues := Values(values).Normalize()
-	if len(finalValues) == 0 {
-		return nil, fmt.Errorf("donut chart must contain at least (1) non-zero value")
-	}
-	return finalValues, nil
 }
