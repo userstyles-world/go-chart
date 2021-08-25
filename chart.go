@@ -126,14 +126,6 @@ func (c Chart) Render(rp RendererProvider, w io.Writer) error {
 		xr, yr, yra = setRangeDomains(canvasBox, xr, yr, yra)
 	}
 
-	if c.hasAnnotationSeries() {
-		canvasBox = c.getAnnotationAdjustedCanvasBox(r, canvasBox, xr, yr, yra)
-		xr, yr, yra = setRangeDomains(canvasBox, xr, yr, yra)
-		xt, yt, yta = c.getAxesTicks(r, xr, yr, yra, xf, yf, yfa)
-
-		Debugf(c.Log, "chart; annotation adjusted canvas box: %v", canvasBox)
-	}
-
 	c.drawCanvas(r, canvasBox)
 	c.drawAxes(r, canvasBox, xr, yr, yra, xt, yt, yta)
 	for index, series := range c.Series {
@@ -412,17 +404,6 @@ func setRangeDomains(canvasBox Box, xr, yr, yra Range) (x, y, yAlt Range) {
 	return xr, yr, yra
 }
 
-func (c Chart) hasAnnotationSeries() bool {
-	for _, s := range c.Series {
-		if as, isAnnotationSeries := s.(AnnotationSeries); isAnnotationSeries {
-			if !as.GetStyle().Hidden {
-				return true
-			}
-		}
-	}
-	return false
-}
-
 func (c Chart) hasSecondarySeries() bool {
 	for _, s := range c.Series {
 		if s.GetYAxis() == YAxisSecondary {
@@ -430,27 +411,6 @@ func (c Chart) hasSecondarySeries() bool {
 		}
 	}
 	return false
-}
-
-func (c Chart) getAnnotationAdjustedCanvasBox(r Renderer, canvasBox Box, xr, yr, yra Range) Box {
-	annotationSeriesBox := canvasBox.Clone()
-	for seriesIndex, s := range c.Series {
-		if as, isAnnotationSeries := s.(AnnotationSeries); isAnnotationSeries {
-			if !as.GetStyle().Hidden {
-				style := c.styleDefaultsSeries(seriesIndex)
-				var annotationBounds Box
-				if as.YAxis == YAxisPrimary {
-					annotationBounds = as.Measure(r, canvasBox, xr, yr, style)
-				} else if as.YAxis == YAxisSecondary {
-					annotationBounds = as.Measure(r, canvasBox, xr, yra, style)
-				}
-
-				annotationSeriesBox = annotationSeriesBox.Grow(annotationBounds)
-			}
-		}
-	}
-
-	return canvasBox.OuterConstrain(c.Box(), annotationSeriesBox)
 }
 
 func (c Chart) getBackgroundStyle() Style {
