@@ -44,10 +44,6 @@ type Renderer interface {
 	// cx and cy represent the bezier "control points".
 	QuadCurveTo(cx, cy, x, y int)
 
-	// ArcTo draws an arc with a given center (cx,cy)
-	// a given set of radii (rx,ry), a startAngle and delta (in radians).
-	ArcTo(cx, cy int, rx, ry, startAngle, delta float64)
-
 	// Close finalizes a shape as drawn by LineTo.
 	Close()
 

@@ -2,7 +2,6 @@ package drawing
 
 import (
 	"fmt"
-	"math"
 )
 
 // PathBuilder describes the interface for path drawing.
@@ -17,8 +16,6 @@ type PathBuilder interface {
 	QuadCurveTo(cx, cy, x, y float64)
 	// CubicCurveTo adds a cubic Bézier curve to the current subpath
 	CubicCurveTo(cx1, cy1, cx2, cy2, x, y float64)
-	// ArcTo adds an arc to the current subpath
-	ArcTo(cx, cy, rx, ry, startAngle, angle float64)
 	// Close creates a line from the current point to the last MoveTo
 	// point (if not the same) and mark the path as closed so the
 	// first and last lines join nicely.
@@ -98,35 +95,6 @@ func (p *Path) CubicCurveTo(cx1, cy1, cx2, cy2, x, y float64) {
 	p.appendToPath(CubicCurveToComponent, cx1, cy1, cx2, cy2, x, y)
 	p.x = x
 	p.y = y
-}
-
-// ArcTo adds an arc to the path
-func (p *Path) ArcTo(cx, cy, rx, ry, startAngle, delta float64) {
-	endAngle := startAngle + delta
-	clockWise := true
-	if delta < 0 {
-		clockWise = false
-	}
-	// normalize
-	if clockWise {
-		for endAngle < startAngle {
-			endAngle += math.Pi * 2.0
-		}
-	} else {
-		for startAngle < endAngle {
-			startAngle += math.Pi * 2.0
-		}
-	}
-	startX := cx + math.Cos(startAngle)*rx
-	startY := cy + math.Sin(startAngle)*ry
-	if len(p.Components) > 0 {
-		p.LineTo(startX, startY)
-	} else {
-		p.MoveTo(startX, startY)
-	}
-	p.appendToPath(ArcToComponent, cx, cy, rx, ry, startAngle, delta)
-	p.x = cx + math.Cos(endAngle)*rx
-	p.y = cy + math.Sin(endAngle)*ry
 }
 
 // Close closes the current path

@@ -3,7 +3,6 @@ package chart
 import (
 	"fmt"
 	"io"
-	"math"
 	"strconv"
 	"strings"
 
@@ -18,6 +17,7 @@ import (
 // SVG returns a new png/raster renderer.
 func SVG(width, height int) (Renderer, error) {
 	buffer := bytebufferpool.Get()
+	buffer2 := bytebufferpool.Get()
 
 	canvas := newCanvas(buffer)
 	canvas.Start(width, height)
@@ -25,7 +25,7 @@ func SVG(width, height int) (Renderer, error) {
 		b:   buffer,
 		c:   canvas,
 		s:   &Style{},
-		p:   []string{},
+		p:   buffer2,
 		dpi: DefaultDPI,
 	}, nil
 }
@@ -35,6 +35,7 @@ func SVG(width, height int) (Renderer, error) {
 func SVGWithCSS(css string, nonce string) func(width, height int) (Renderer, error) {
 	return func(width, height int) (Renderer, error) {
 		buffer := bytebufferpool.Get()
+		buffer2 := bytebufferpool.Get()
 
 		canvas := newCanvas(buffer)
 		canvas.css = css
@@ -44,7 +45,7 @@ func SVGWithCSS(css string, nonce string) func(width, height int) (Renderer, err
 			b:   buffer,
 			c:   canvas,
 			s:   &Style{},
-			p:   []string{},
+			p:   buffer2,
 			dpi: DefaultDPI,
 		}, nil
 	}
@@ -56,7 +57,7 @@ type vectorRenderer struct {
 	b   *bytebufferpool.ByteBuffer
 	c   *canvas
 	s   *Style
-	p   []string
+	p   *bytebufferpool.ByteBuffer
 	fc  font.Face
 }
 
@@ -101,50 +102,55 @@ func (vr *vectorRenderer) SetStrokeDashArray(dashArray []float64) {
 	vr.s.StrokeDashArray = dashArray
 }
 
+var (
+	mStart = []byte("M ")
+	space  = []byte(" ")
+)
+
 // MoveTo implements the interface method.
 func (vr *vectorRenderer) MoveTo(x, y int) {
-	vr.p = append(vr.p, fmt.Sprintf("M %d %d", x, y))
+	vr.p.Write(mStart)
+	vr.p.WriteString(itoa(x))
+	vr.p.Write(space)
+	vr.p.WriteString(itoa(y))
 }
+
+var (
+	lStart = []byte("L ")
+)
 
 // LineTo implements the interface method.
 func (vr *vectorRenderer) LineTo(x, y int) {
-	vr.p = append(vr.p, fmt.Sprintf("L %d %d", x, y))
+	vr.p.Write(lStart)
+	vr.p.WriteString(itoa(x))
+	vr.p.Write(space)
+	vr.p.WriteString(itoa(y))
 }
+
+var (
+	qStart = []byte("Q")
+	comma  = []byte(",")
+)
 
 // QuadCurveTo draws a quad curve.
 func (vr *vectorRenderer) QuadCurveTo(cx, cy, x, y int) {
-	vr.p = append(vr.p, fmt.Sprintf("Q%d,%d %d,%d", cx, cy, x, y))
+	vr.p.Write(qStart)
+	vr.p.WriteString(itoa(cx))
+	vr.p.Write(comma)
+	vr.p.WriteString(itoa(cy))
+	vr.p.Write(space)
+	vr.p.WriteString(itoa(x))
+	vr.p.Write(comma)
+	vr.p.WriteString(itoa(y))
 }
 
-func (vr *vectorRenderer) ArcTo(cx, cy int, rx, ry, startAngle, delta float64) {
-	startAngle = RadianAdd(startAngle, _pi2)
-	endAngle := RadianAdd(startAngle, delta)
-
-	startx := cx + int(rx*math.Sin(startAngle))
-	starty := cy - int(ry*math.Cos(startAngle))
-
-	if len(vr.p) > 0 {
-		vr.p = append(vr.p, fmt.Sprintf("L %d %d", startx, starty))
-	} else {
-		vr.p = append(vr.p, fmt.Sprintf("M %d %d", startx, starty))
-	}
-
-	endx := cx + int(rx*math.Sin(endAngle))
-	endy := cy - int(ry*math.Cos(endAngle))
-
-	dd := RadiansToDegrees(delta)
-
-	largeArcFlag := 0
-	if delta > _pi {
-		largeArcFlag = 1
-	}
-
-	vr.p = append(vr.p, fmt.Sprintf("A %d %d %0.2f %d 1 %d %d", int(rx), int(ry), dd, largeArcFlag, endx, endy))
-}
+var (
+	zClose = []byte("Z")
+)
 
 // Close closes a shape.
 func (vr *vectorRenderer) Close() {
-	vr.p = append(vr.p, "Z")
+	vr.p.Write(zClose)
 }
 
 // Stroke draws the path with no fill.
@@ -164,8 +170,8 @@ func (vr *vectorRenderer) FillStroke() {
 
 // drawPath draws a path.
 func (vr *vectorRenderer) drawPath(s Style) {
-	vr.c.Path(strings.Join(vr.p, "\n"), s.GetFillAndStrokeOptions())
-	vr.p = []string{} // clear the path
+	vr.c.Path(vr.p.String(), s.GetFillAndStrokeOptions())
+	vr.p.Reset()
 }
 
 // Circle implements the interface method.
@@ -312,11 +318,23 @@ func (c *canvas) Start(width, height int) {
 	}
 }
 
+var (
+	pathStart = []byte("<path ")
+	pathD     = []byte("d=\"")
+	pathMark  = []byte("\" ")
+	pathEnd   = []byte("/>")
+)
+
 func (c *canvas) Path(d string, style Style) {
+	_, _ = c.w.Write(pathStart)
 	if len(style.StrokeDashArray) > 0 {
-		_, _ = c.w.Write([]byte(fmt.Sprintf(`<path %s d="%s" %s/>`, c.getStrokeDashArray(style), d, c.styleAsSVG(style))))
+		_, _ = c.w.WriteString(c.getStrokeDashArray(style))
 	}
-	_, _ = c.w.Write([]byte(fmt.Sprintf(`<path d="%s" %s/>`, d, c.styleAsSVG(style))))
+	_, _ = c.w.Write(pathD)
+	_, _ = c.w.WriteString(d)
+	_, _ = c.w.Write(pathMark)
+	_, _ = c.w.WriteString(c.styleAsSVG(style))
+	_, _ = c.w.Write(pathEnd)
 }
 
 var (
@@ -369,9 +387,9 @@ func (*canvas) getStrokeDashArray(s Style) string {
 	if len(s.StrokeDashArray) > 0 {
 		values := make([]string, 0, len(s.StrokeDashArray))
 		for _, v := range s.StrokeDashArray {
-			values = append(values, fmt.Sprintf("%0.1f", v))
+			values = append(values, ftoa(v, 1))
 		}
-		return "stroke-dasharray=\"" + strings.Join(values, ", ") + "\""
+		return "stroke-dasharray=\"" + strings.Join(values, ", ") + "\" "
 	}
 	return ""
 }

@@ -170,11 +170,6 @@ func (gc *StackGraphicContext) CubicCurveTo(cx1, cy1, cx2, cy2, x, y float64) {
 	gc.current.Path.CubicCurveTo(cx1, cy1, cx2, cy2, x, y)
 }
 
-// ArcTo draws an arc.
-func (gc *StackGraphicContext) ArcTo(cx, cy, rx, ry, startAngle, delta float64) {
-	gc.current.Path.ArcTo(cx, cy, rx, ry, startAngle, delta)
-}
-
 // Close closes a path.
 func (gc *StackGraphicContext) Close() {
 	gc.current.Path.Close()
