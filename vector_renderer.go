@@ -303,10 +303,28 @@ type canvas struct {
 	nonce     string
 }
 
+var (
+	canvasStart  = []byte(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 `)
+	canvasWidth  = []byte(`" width="`)
+	canvasHeight = []byte(`" height="`)
+	canvasEnd    = []byte("\">\n")
+)
+
 func (c *canvas) Start(width, height int) {
 	c.width = width
 	c.height = height
-	_, _ = c.w.Write([]byte(fmt.Sprintf(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 %d %d" width="%d" height="%d">`+"\n", c.width, c.height, c.width, c.height)))
+	sWidth := itoa(c.width)
+	sHeight := itoa(c.height)
+
+	_, _ = c.w.Write(canvasStart)
+	_, _ = c.w.WriteString(sWidth)
+	_, _ = c.w.Write(space)
+	_, _ = c.w.WriteString(sHeight)
+	_, _ = c.w.Write(canvasWidth)
+	_, _ = c.w.WriteString(sWidth)
+	_, _ = c.w.Write(canvasHeight)
+	_, _ = c.w.WriteString(sHeight)
+	_, _ = c.w.Write(canvasEnd)
 	if c.css != "" {
 		_, _ = c.w.Write([]byte(`<style type="text/css"`))
 		if c.nonce != "" {
@@ -378,8 +396,12 @@ func (c *canvas) Circle(x, y, r int, style Style) {
 	_, _ = c.w.Write([]byte(fmt.Sprintf(`<circle cx="%d" cy="%d" r="%d" %s/>`, x, y, r, c.styleAsSVG(style))))
 }
 
+var (
+	svgEnd = []byte("</svg>")
+)
+
 func (c *canvas) End() {
-	_, _ = c.w.Write([]byte("</svg>"))
+	_, _ = c.w.Write(svgEnd)
 }
 
 // getStrokeDashArray returns the stroke-dasharray property of a style.
