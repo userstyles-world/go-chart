@@ -1,7 +1,6 @@
 package chart
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"math"
@@ -13,11 +12,13 @@ import (
 
 	"github.com/golang/freetype/truetype"
 	"github.com/userstyles-world/go-chart/v2/drawing"
+	"github.com/valyala/bytebufferpool"
 )
 
 // SVG returns a new png/raster renderer.
 func SVG(width, height int) (Renderer, error) {
-	buffer := bytes.NewBuffer([]byte{})
+	buffer := bytebufferpool.Get()
+
 	canvas := newCanvas(buffer)
 	canvas.Start(width, height)
 	return &vectorRenderer{
@@ -33,7 +34,8 @@ func SVG(width, height int) (Renderer, error) {
 // The optional nonce argument sets a CSP nonce.
 func SVGWithCSS(css string, nonce string) func(width, height int) (Renderer, error) {
 	return func(width, height int) (Renderer, error) {
-		buffer := bytes.NewBuffer([]byte{})
+		buffer := bytebufferpool.Get()
+
 		canvas := newCanvas(buffer)
 		canvas.css = css
 		canvas.nonce = nonce
@@ -51,7 +53,7 @@ func SVGWithCSS(css string, nonce string) func(width, height int) (Renderer, err
 // vectorRenderer renders chart commands to a bitmap.
 type vectorRenderer struct {
 	dpi float64
-	b   *bytes.Buffer
+	b   *bytebufferpool.ByteBuffer
 	c   *canvas
 	s   *Style
 	p   []string
@@ -274,6 +276,7 @@ func (vr *vectorRenderer) ClearTextRotation() {
 func (vr *vectorRenderer) Save(w io.Writer) error {
 	vr.c.End()
 	_, err := w.Write(vr.b.Bytes())
+	bytebufferpool.Put(vr.b)
 	return err
 }
 
