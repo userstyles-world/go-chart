@@ -8,6 +8,7 @@ import (
 
 	"github.com/userstyles-world/go-chart/v2/drawing"
 	"github.com/userstyles-world/go-chart/v2/testutil"
+	"github.com/valyala/bytebufferpool"
 )
 
 func TestVectorRendererPath(t *testing.T) {
@@ -90,10 +91,11 @@ func TestCanvasClassSVG(t *testing.T) {
 }
 
 func TestCanvasCustomInlineStylesheet(t *testing.T) {
-	b := strings.Builder{}
+	b := bytebufferpool.Get()
+	defer bytebufferpool.Put(b)
 
 	canvas := &canvas{
-		w:   &b,
+		w:   b,
 		css: ".background { fill: red }",
 	}
 
@@ -103,10 +105,11 @@ func TestCanvasCustomInlineStylesheet(t *testing.T) {
 }
 
 func TestCanvasCustomInlineStylesheetWithNonce(t *testing.T) {
-	b := strings.Builder{}
+	b := bytebufferpool.Get()
+	defer bytebufferpool.Put(b)
 
 	canvas := &canvas{
-		w:     &b,
+		w:     b,
 		css:   ".background { fill: red }",
 		nonce: "RAND0MSTRING",
 	}

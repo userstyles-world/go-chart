@@ -280,7 +280,7 @@ func (vr *vectorRenderer) Save(w io.Writer) error {
 	return err
 }
 
-func newCanvas(w io.Writer) *canvas {
+func newCanvas(w *bytebufferpool.ByteBuffer) *canvas {
 	return &canvas{
 		w:   w,
 		dpi: DefaultDPI,
@@ -288,7 +288,7 @@ func newCanvas(w io.Writer) *canvas {
 }
 
 type canvas struct {
-	w         io.Writer
+	w         *bytebufferpool.ByteBuffer
 	dpi       float64
 	textTheta *float64
 	width     int
@@ -319,13 +319,41 @@ func (c *canvas) Path(d string, style Style) {
 	_, _ = c.w.Write([]byte(fmt.Sprintf(`<path d="%s" %s/>`, d, c.styleAsSVG(style))))
 }
 
+var (
+	textStart = []byte(`<text x="`)
+	textY     = []byte(`" y="`)
+	textMark  = []byte(`" `)
+	textMark2 = []byte(`>`)
+	textEnd   = []byte(`</text>`)
+
+	transformStarts = []byte(`transform="rotate(`)
+	transformCoords = []byte(`,`)
+	transformEnds   = []byte(`)"`)
+)
+
 func (c *canvas) Text(x, y int, body string, style Style) {
-	if c.textTheta == nil {
-		_, _ = c.w.Write([]byte(fmt.Sprintf(`<text x="%d" y="%d" %s>%s</text>`, x, y, c.styleAsSVG(style), body)))
-	} else {
-		transform := fmt.Sprintf(` transform="rotate(%0.2f,%d,%d)"`, RadiansToDegrees(*c.textTheta), x, y)
-		_, _ = c.w.Write([]byte(fmt.Sprintf(`<text x="%d" y="%d" %s%s>%s</text>`, x, y, c.styleAsSVG(style), transform, body)))
+	sX := itoa(x)
+	sY := itoa(y)
+
+	_, _ = c.w.Write(textStart)
+	_, _ = c.w.WriteString(sX)
+	_, _ = c.w.Write(textY)
+	_, _ = c.w.WriteString(sY)
+	_, _ = c.w.Write(textMark)
+	_, _ = c.w.WriteString(c.styleAsSVG(style))
+
+	if c.textTheta != nil {
+		_, _ = c.w.Write(transformStarts)
+		_, _ = c.w.WriteString(ftoa(RadiansToDegrees(*c.textTheta), 2))
+		_, _ = c.w.Write(transformCoords)
+		_, _ = c.w.WriteString(sX)
+		_, _ = c.w.Write(transformCoords)
+		_, _ = c.w.WriteString(sY)
+		_, _ = c.w.Write(transformEnds)
 	}
+	_, _ = c.w.Write(textMark2)
+	_, _ = c.w.WriteString(body)
+	_, _ = c.w.Write(textEnd)
 }
 
 func (c *canvas) Circle(x, y, r int, style Style) {
