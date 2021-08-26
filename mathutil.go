@@ -3,9 +3,7 @@ package chart
 import "math"
 
 const (
-	_pi  = math.Pi
 	_2pi = 2 * math.Pi
-	_pi2 = math.Pi / 2.0
 	_d2r = (math.Pi / 180.0)
 	_r2d = (180.0 / math.Pi)
 )
