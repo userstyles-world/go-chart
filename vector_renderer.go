@@ -109,10 +109,10 @@ var (
 
 // MoveTo implements the interface method.
 func (vr *vectorRenderer) MoveTo(x, y int) {
-	vr.p.Write(mStart)
-	vr.p.WriteString(itoa(x))
-	vr.p.Write(space)
-	vr.p.WriteString(itoa(y))
+	_, _ = vr.p.Write(mStart)
+	_, _ = vr.p.WriteString(itoa(x))
+	_, _ = vr.p.Write(space)
+	_, _ = vr.p.WriteString(itoa(y))
 }
 
 var (
@@ -121,10 +121,10 @@ var (
 
 // LineTo implements the interface method.
 func (vr *vectorRenderer) LineTo(x, y int) {
-	vr.p.Write(lStart)
-	vr.p.WriteString(itoa(x))
-	vr.p.Write(space)
-	vr.p.WriteString(itoa(y))
+	_, _ = vr.p.Write(lStart)
+	_, _ = vr.p.WriteString(itoa(x))
+	_, _ = vr.p.Write(space)
+	_, _ = vr.p.WriteString(itoa(y))
 }
 
 var (
@@ -134,14 +134,14 @@ var (
 
 // QuadCurveTo draws a quad curve.
 func (vr *vectorRenderer) QuadCurveTo(cx, cy, x, y int) {
-	vr.p.Write(qStart)
-	vr.p.WriteString(itoa(cx))
-	vr.p.Write(comma)
-	vr.p.WriteString(itoa(cy))
-	vr.p.Write(space)
-	vr.p.WriteString(itoa(x))
-	vr.p.Write(comma)
-	vr.p.WriteString(itoa(y))
+	_, _ = vr.p.Write(qStart)
+	_, _ = vr.p.WriteString(itoa(cx))
+	_, _ = vr.p.Write(comma)
+	_, _ = vr.p.WriteString(itoa(cy))
+	_, _ = vr.p.Write(space)
+	_, _ = vr.p.WriteString(itoa(x))
+	_, _ = vr.p.Write(comma)
+	_, _ = vr.p.WriteString(itoa(y))
 }
 
 var (
@@ -150,7 +150,7 @@ var (
 
 // Close closes a shape.
 func (vr *vectorRenderer) Close() {
-	vr.p.Write(zClose)
+	_, _ = vr.p.Write(zClose)
 }
 
 // Stroke draws the path with no fill.
