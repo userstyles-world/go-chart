@@ -669,27 +669,98 @@ func TestChartTextValues(t *testing.T) {
 }
 
 func BenchmarkBarChartLegend(b *testing.B) {
-	c := Chart{
+	// Exported data [6 4 9 3 11 3 8 4 5 11 8 8 8 9 9 9 8 5 6 13 10 6 8 7 11 5 16 6 9 8 7 8 8 17 11 11 11 10 14 6 19 14 9 11 10 13 6 9 12]
+	dailyViews := []float64{6, 4, 9, 3, 11, 3, 8, 4, 5, 11, 8, 8, 8, 9, 9, 9, 8, 5, 6, 13, 10, 6, 8, 7, 11, 5, 16, 6, 9, 8, 7, 8, 8, 17, 11, 11, 11, 10, 14, 6, 19, 14, 9, 11, 10, 13, 6, 9, 12}
+
+	// Exported data [25 22 26 23 23 26 28 30 34 30 29 26 28 31 31 35 32 30 30 35 43 40 40 37 34 36 38 39 35 40 39 31 44 43 49 44 54 48 49 59 58 56 58 63 58 62 59 71 72]
+	dailyUpdates := []float64{25, 22, 26, 23, 23, 26, 28, 30, 34, 30, 29, 26, 28, 31, 31, 35, 32, 30, 30, 35, 43, 40, 40, 37, 34, 36, 38, 39, 35, 40, 39, 31, 44, 43, 49, 44, 54, 48, 49, 59, 58, 56, 58, 63, 58, 62, 59, 71, 72}
+
+	// Exported data [25 7 8 5 5 4 9 9 10 7 4 5 10 3 7 13 9 7 7 11 14 10 13 12 10 11 12 12 13 6 11 11 12 13 12 11 12 14 11 12 15 14 13 18 19 25 13 19 13]
+	dailyInstalls := []float64{25, 7, 8, 5, 5, 4, 9, 9, 10, 7, 4, 5, 10, 3, 7, 13, 9, 7, 7, 11, 14, 10, 13, 12, 10, 11, 12, 12, 13, 6, 11, 11, 12, 13, 12, 11, 12, 14, 11, 12, 15, 14, 13, 18, 19, 25, 13, 19, 13}
+
+	// Exported data [2021-07-07 23:59:00.284008573 +0000 UTC 2021-07-08 23:59:00.448171544 +0000 UTC 2021-07-09 23:59:00.430622428 +0000 UTC 2021-07-10 23:59:00.518588335 +0000 UTC 2021-07-11 23:59:00.598871418 +0000 UTC 2021-07-12 23:59:00.762924884 +0000 UTC 2021-07-13 23:59:00.894566364 +0000 UTC 2021-07-14 23:59:01.183382398 +0000 UTC 2021-07-15 23:59:02.110516404 +0000 UTC 2021-07-16 23:59:03.01251904 +0000 UTC 2021-07-17 23:59:03.364826174 +0000 UTC 2021-07-18 23:59:07.053386001 +0000 UTC 2021-07-19 23:59:04.613313208 +0000 UTC 2021-07-20 23:59:05.157727215 +0000 UTC 2021-07-21 23:59:06.256763794 +0000 UTC 2021-07-22 23:59:08.234239808 +0000 UTC 2021-07-23 23:59:07.321565106 +0000 UTC 2021-07-24 23:59:08.298329788 +0000 UTC 2021-07-25 23:59:08.633682537 +0000 UTC 2021-07-26 23:59:10.320324132 +0000 UTC 2021-07-27 23:59:11.124146932 +0000 UTC 2021-07-28 23:59:12.724467815 +0000 UTC 2021-07-29 23:59:26.634052314 +0000 UTC 2021-07-30 23:59:15.329860625 +0000 UTC 2021-07-31 23:59:17.940346159 +0000 UTC 2021-08-01 23:59:18.490248966 +0000 UTC 2021-08-02 23:59:21.941662503 +0000 UTC 2021-08-03 23:59:35.401362307 +0000 UTC 2021-08-04 23:59:00.678379832 +0000 UTC 2021-08-05 23:59:00.8755122 +0000 UTC 2021-08-06 23:59:00.934198575 +0000 UTC 2021-08-07 23:59:00.964950689 +0000 UTC 2021-08-08 23:59:00.829227921 +0000 UTC 2021-08-09 23:59:00.971994166 +0000 UTC 2021-08-10 23:59:00.852921338 +0000 UTC 2021-08-11 23:59:00.933554721 +0000 UTC 2021-08-12 23:59:00.989925044 +0000 UTC 2021-08-13 23:59:01.078751216 +0000 UTC 2021-08-14 23:59:01.113226627 +0000 UTC 2021-08-15 23:59:01.133484412 +0000 UTC 2021-08-16 23:59:01.104150383 +0000 UTC 2021-08-17 23:59:01.148971349 +0000 UTC 2021-08-18 23:59:01.357223006 +0000 UTC 2021-08-19 23:59:01.131506323 +0000 UTC 2021-08-20 23:59:01.272777903 +0000 UTC 2021-08-21 23:59:01.173679573 +0000 UTC 2021-08-22 23:59:01.270419124 +0000 UTC 2021-08-23 23:59:01.266545934 +0000 UTC 2021-08-24 23:59:01.455933761 +0000 UTC]
+	dates := []time.Time{
+		time.Date(2021, time.July, 7, 23, 59, 0, 0, time.UTC),
+		time.Date(2021, time.July, 8, 23, 59, 0, 0, time.UTC),
+		time.Date(2021, time.July, 9, 23, 59, 0, 0, time.UTC),
+		time.Date(2021, time.July, 10, 23, 59, 0, 518588335, time.UTC),
+		time.Date(2021, time.July, 11, 23, 59, 0, 598871418, time.UTC),
+		time.Date(2021, time.July, 12, 23, 59, 0, 762924884, time.UTC),
+		time.Date(2021, time.July, 13, 23, 59, 1, 894566364, time.UTC),
+		time.Date(2021, time.July, 14, 23, 59, 2, 183382398, time.UTC),
+		time.Date(2021, time.July, 15, 23, 59, 3, 110516404, time.UTC),
+		time.Date(2021, time.July, 16, 23, 59, 4, 0, time.UTC),
+		time.Date(2021, time.July, 17, 23, 59, 5, 364826174, time.UTC),
+		time.Date(2021, time.July, 18, 23, 59, 7, 0, time.UTC),
+		time.Date(2021, time.July, 19, 23, 59, 4, 613313208, time.UTC),
+		time.Date(2021, time.July, 20, 23, 59, 5, 157727215, time.UTC),
+		time.Date(2021, time.July, 21, 23, 59, 6, 256763794, time.UTC),
+		time.Date(2021, time.July, 22, 23, 59, 8, 234239808, time.UTC),
+		time.Date(2021, time.July, 23, 23, 59, 7, 321565106, time.UTC),
+		time.Date(2021, time.July, 24, 23, 59, 8, 298329788, time.UTC),
+		time.Date(2021, time.July, 25, 23, 59, 8, 633682537, time.UTC),
+		time.Date(2021, time.July, 26, 23, 59, 10, 320324132, time.UTC),
+		time.Date(2021, time.July, 27, 23, 59, 9, 558598892, time.UTC),
+		time.Date(2021, time.July, 28, 23, 59, 10, 588790837, time.UTC),
+		time.Date(2021, time.July, 29, 23, 59, 11, 805879082, time.UTC),
+		time.Date(2021, time.July, 30, 23, 59, 12, 805879082, time.UTC),
+		time.Date(2021, time.July, 31, 23, 59, 13, 805879082, time.UTC),
+		time.Date(2021, time.August, 1, 23, 59, 14, 805879082, time.UTC),
+		time.Date(2021, time.August, 2, 23, 59, 15, 805879082, time.UTC),
+		time.Date(2021, time.August, 3, 23, 59, 16, 805879082, time.UTC),
+		time.Date(2021, time.August, 4, 23, 59, 17, 805879082, time.UTC),
+		time.Date(2021, time.August, 5, 23, 59, 18, 805879082, time.UTC),
+		time.Date(2021, time.August, 6, 23, 59, 19, 805879082, time.UTC),
+		time.Date(2021, time.August, 7, 23, 59, 20, 805879082, time.UTC),
+		time.Date(2021, time.August, 8, 23, 59, 21, 805879082, time.UTC),
+		time.Date(2021, time.August, 9, 23, 59, 22, 805879082, time.UTC),
+		time.Date(2021, time.August, 10, 23, 59, 23, 805879082, time.UTC),
+		time.Date(2021, time.August, 11, 23, 59, 24, 805879082, time.UTC),
+		time.Date(2021, time.August, 12, 23, 59, 25, 805879082, time.UTC),
+		time.Date(2021, time.August, 13, 23, 59, 26, 805879082, time.UTC),
+		time.Date(2021, time.August, 14, 23, 59, 27, 805879082, time.UTC),
+		time.Date(2021, time.August, 15, 23, 59, 28, 805879082, time.UTC),
+		time.Date(2021, time.August, 16, 23, 59, 29, 805879082, time.UTC),
+		time.Date(2021, time.August, 17, 23, 59, 30, 805879082, time.UTC),
+		time.Date(2021, time.August, 18, 23, 59, 31, 805879082, time.UTC),
+		time.Date(2021, time.August, 19, 23, 59, 32, 805879082, time.UTC),
+		time.Date(2021, time.August, 20, 23, 59, 33, 805879082, time.UTC),
+		time.Date(2021, time.August, 21, 23, 59, 34, 805879082, time.UTC),
+		time.Date(2021, time.August, 22, 23, 59, 35, 805879082, time.UTC),
+		time.Date(2021, time.August, 23, 23, 59, 36, 805879082, time.UTC),
+		time.Date(2021, time.August, 24, 23, 59, 37, 805879082, time.UTC),
+	}
+
+	dailyGraph := Chart{
 		Width:      1248,
-		Height:     400,
 		Canvas:     Style{ClassName: "bg inner"},
 		Background: Style{ClassName: "bg outer"},
 		XAxis:      XAxis{Name: "Date"},
 		YAxis:      YAxis{Name: "Daily count"},
 		Series: []Series{
 			TimeSeries{
-				Name:    "goog",
-				XValues: []time.Time{time.Now(), time.Now().AddDate(0, 0, -1)},
-				YValues: []float64{1.0, 2.0},
+				Name:    "Daily installs",
+				XValues: dates,
+				YValues: dailyInstalls,
+			},
+			TimeSeries{
+				Name:    "Daily updates",
+				XValues: dates,
+				YValues: dailyUpdates,
+			},
+			TimeSeries{
+				Name:    "Daily views",
+				XValues: dates,
+				YValues: dailyViews,
 			},
 		},
 	}
 
-	c.Elements = []Renderable{Legend(&c)}
+	dailyGraph.Elements = []Renderable{Legend(&dailyGraph)}
 
 	b.ResetTimer()
 	var buffer bytes.Buffer
 	for i := 0; i < b.N; i++ {
-		_ = c.Render(SVG, &buffer)
+		_ = dailyGraph.Render(SVG, &buffer)
 	}
 }
