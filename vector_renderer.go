@@ -464,13 +464,13 @@ func (c *canvas) styleAsSVG(s Style) string {
 			classes = append(classes, "text")
 		}
 
-		return fmt.Sprintf("class=\"%s\"", strings.Join(classes, " "))
+		return "class=\"" + strings.Join(classes, " ") + "\""
 	}
 
 	var pieces []string
 
 	if sw := s.StrokeWidth; sw != 0 {
-		pieces = append(pieces, "stroke-width:"+fmt.Sprintf("%d", int(sw)))
+		pieces = append(pieces, "stroke-width:"+itoa(int(sw)))
 	} else {
 		pieces = append(pieces, "stroke-width:0")
 	}
