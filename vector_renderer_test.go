@@ -74,9 +74,9 @@ func TestCanvasStyleSVG(t *testing.T) {
 	svgString := canvas.styleAsSVG(set)
 	testutil.AssertNotEmpty(t, svgString)
 	testutil.AssertTrue(t, strings.HasPrefix(svgString, "style=\""))
-	testutil.AssertTrue(t, strings.Contains(svgString, "stroke:rgba(255,255,255,1.0)"))
+	testutil.AssertTrue(t, strings.Contains(svgString, "stroke:rgba(255,255,255,1)"))
 	testutil.AssertTrue(t, strings.Contains(svgString, "stroke-width:5"))
-	testutil.AssertTrue(t, strings.Contains(svgString, "fill:rgba(255,255,255,1.0)"))
+	testutil.AssertTrue(t, strings.Contains(svgString, "fill:rgba(255,255,255,1)"))
 	testutil.AssertTrue(t, strings.HasSuffix(svgString, "\""))
 }
 

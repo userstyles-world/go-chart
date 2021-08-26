@@ -1,7 +1,6 @@
 package drawing
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -119,8 +118,43 @@ func (c Color) AverageWith(other Color) Color {
 	}
 }
 
+var cCache = make(map[Color]string)
+
 // String returns a css string representation of the color.
 func (c Color) String() string {
+	if a, ok := cCache[c]; ok {
+		return a
+	}
 	fa := float64(c.A) / float64(255)
-	return fmt.Sprintf("rgba(%v,%v,%v,%.1f)", c.R, c.G, c.B, fa)
+	result := "rgba(" + strconv.FormatUint(uint64(c.R), 10) + "," + strconv.FormatUint(uint64(c.G), 10) + "," + strconv.FormatUint(uint64(c.B), 10) + "," + fastFloater(fa) + ")"
+	cCache[c] = result
+	return result
+}
+
+// F is between 0 and 1. 0 is fully transparent and 1 is fully opaque.
+// We should return 0.1, 0.2, 0.3 etc.
+func fastFloater(f float64) string {
+	if f > 0.95 {
+		return "1"
+	} else if f < 0.05 {
+		return "0"
+	} else if f >= 0.85 && f < 0.95 {
+		return "0.9"
+	} else if f >= 0.75 && f < 0.85 {
+		return "0.8"
+	} else if f >= 0.65 && f < 0.75 {
+		return "0.7"
+	} else if f >= 0.55 && f < 0.65 {
+		return "0.6"
+	} else if f >= 0.45 && f < 0.55 {
+		return "0.5"
+	} else if f >= 0.35 && f < 0.45 {
+		return "0.4"
+	} else if f >= 0.25 && f < 0.35 {
+		return "0.3"
+	} else if f >= 0.15 && f < 0.25 {
+		return "0.2"
+	} else {
+		return "0.1"
+	}
 }
