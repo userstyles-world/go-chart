@@ -422,10 +422,10 @@ func (*canvas) getFontFace(s Style) string {
 	if s.GetFont() != nil {
 		name := s.GetFont().Name(truetype.NameIDFontFamily)
 		if len(name) != 0 {
-			family = fmt.Sprintf(`'%s',%s`, name, family)
+			family = `'` + name + `', ` + family
 		}
 	}
-	return fmt.Sprintf("font-family:%s", family)
+	return "font-family:" + family
 }
 
 // styleAsSVG returns the style as a svg style or class string.
