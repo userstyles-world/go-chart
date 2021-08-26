@@ -29,6 +29,14 @@ func MinMax(values ...float64) (min, max float64) {
 	return
 }
 
+// MinInt2 returns the minum int between two values.
+func MinInt2(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 // MinInt returns the minimum int.
 func MinInt(values ...int) (min int) {
 	if len(values) == 0 {

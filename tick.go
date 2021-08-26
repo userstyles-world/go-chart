@@ -49,21 +49,9 @@ func GenerateContinuousTicks(r Renderer, ra Range, isVertical bool, style Style,
 	if vf == nil {
 		vf = FloatValueFormatter
 	}
-
-	var ticks []Tick
 	min, max := ra.GetMin(), ra.GetMax()
 
-	if ra.IsDescending() {
-		ticks = append(ticks, Tick{
-			Value: max,
-			Label: vf(max),
-		})
-	} else {
-		ticks = append(ticks, Tick{
-			Value: min,
-			Label: vf(min),
-		})
-	}
+	isDescending := ra.IsDescending()
 
 	minLabel := vf(min)
 	style.GetTextOptions().WriteToRenderer(r)
@@ -84,11 +72,30 @@ func GenerateContinuousTicks(r Renderer, ra Range, isVertical bool, style Style,
 	tickStep := rangeDelta / float64(intermediateTickCount)
 
 	roundTo := GetRoundToForDelta(rangeDelta) / 10
-	intermediateTickCount = MinInt(intermediateTickCount, DefaultTickCountSanityCheck)
+	intermediateTickCount = MinInt2(intermediateTickCount, DefaultTickCountSanityCheck)
+
+	// check if intermediateTickCount is < 0
+	tickAmount := 2
+	if intermediateTickCount > 0 {
+		tickAmount += intermediateTickCount - 1
+	}
+	ticks := make([]Tick, 0, tickAmount)
+
+	if isDescending {
+		ticks = append(ticks, Tick{
+			Value: max,
+			Label: vf(max),
+		})
+	} else {
+		ticks = append(ticks, Tick{
+			Value: min,
+			Label: vf(min),
+		})
+	}
 
 	for x := 1; x < intermediateTickCount; x++ {
 		var tickValue float64
-		if ra.IsDescending() {
+		if isDescending {
 			tickValue = max - RoundUp(tickStep*float64(x), roundTo)
 		} else {
 			tickValue = min + RoundUp(tickStep*float64(x), roundTo)
@@ -99,7 +106,7 @@ func GenerateContinuousTicks(r Renderer, ra Range, isVertical bool, style Style,
 		})
 	}
 
-	if ra.IsDescending() {
+	if isDescending {
 		ticks = append(ticks, Tick{
 			Value: min,
 			Label: vf(min),

@@ -9,9 +9,40 @@ import (
 // ValueFormatter is a function that takes a value and produces a string.
 type ValueFormatter func(v interface{}) string
 
+var (
+	// Unix to string
+	cachingTimeFormat = make(map[int64]string)
+)
+
 // TimeValueFormatter is a ValueFormatter for timestamps.
 func TimeValueFormatter(v interface{}) string {
-	return formatTime(v, DefaultDateFormat)
+	if typed, isTyped := v.(time.Time); isTyped {
+		if ccache, ok := cachingTimeFormat[typed.Unix()]; ok {
+			return ccache
+		}
+		result := typed.Format(DefaultDateFormat)
+		cachingTimeFormat[typed.Unix()] = result
+		return result
+	}
+	if typed, isTyped := v.(int64); isTyped {
+		unix := time.Unix(0, typed)
+		if ccache, ok := cachingTimeFormat[unix.Unix()]; ok {
+			return ccache
+		}
+		result := unix.Format(DefaultDateFormat)
+		cachingTimeFormat[unix.Unix()] = result
+		return result
+	}
+	if typed, isTyped := v.(float64); isTyped {
+		unix := time.Unix(0, int64(typed))
+		if ccache, ok := cachingTimeFormat[unix.Unix()]; ok {
+			return ccache
+		}
+		result := unix.Format(DefaultDateFormat)
+		cachingTimeFormat[unix.Unix()] = result
+		return result
+	}
+	return ""
 }
 
 // TimeHourValueFormatter is a ValueFormatter for timestamps.
@@ -68,7 +99,19 @@ func IntValueFormatter(v interface{}) string {
 
 // FloatValueFormatter is a ValueFormatter for float64.
 func FloatValueFormatter(v interface{}) string {
-	return FloatValueFormatterWithFormat(v, DefaultFloatFormat)
+	if typed, isTyped := v.(int); isTyped {
+		return ftoa2(float64(typed))
+	}
+	if typed, isTyped := v.(int64); isTyped {
+		return ftoa2(float64(typed))
+	}
+	if typed, isTyped := v.(float32); isTyped {
+		return ftoa2(float64(typed))
+	}
+	if typed, isTyped := v.(float64); isTyped {
+		return ftoa2(typed)
+	}
+	return ""
 }
 
 // PercentValueFormatter is a formatter for percent values.

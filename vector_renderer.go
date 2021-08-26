@@ -260,22 +260,22 @@ func (vr *vectorRenderer) MeasureText(body string) (box Box) {
 
 		box.Right = w
 		box.Bottom = int(drawing.PointsToPixels(vr.dpi, vr.s.FontSize))
-		if vr.c.textTheta == nil {
+		if vr.c.textTheta == 0.0 {
 			return
 		}
-		box = box.Corners().Rotate(RadiansToDegrees(*vr.c.textTheta)).Box()
+		box = box.Corners().Rotate(RadiansToDegrees(vr.c.textTheta)).Box()
 	}
 	return
 }
 
 // SetTextRotation sets the text rotation.
 func (vr *vectorRenderer) SetTextRotation(radians float64) {
-	vr.c.textTheta = &radians
+	vr.c.textTheta = radians
 }
 
 // ClearTextRotation clears the text rotation.
 func (vr *vectorRenderer) ClearTextRotation() {
-	vr.c.textTheta = nil
+	vr.c.textTheta = 0.0
 }
 
 // Save saves the renderer's contents to a writer.
@@ -296,7 +296,7 @@ func newCanvas(w *bytebufferpool.ByteBuffer) *canvas {
 type canvas struct {
 	w         *bytebufferpool.ByteBuffer
 	dpi       float64
-	textTheta *float64
+	textTheta float64
 	width     int
 	height    int
 	css       string
@@ -378,9 +378,9 @@ func (c *canvas) Text(x, y int, body string, style Style) {
 	_, _ = c.w.Write(textMark)
 	_, _ = c.w.WriteString(c.styleAsSVG(style))
 
-	if c.textTheta != nil {
+	if c.textTheta != 0.0 {
 		_, _ = c.w.Write(transformStarts)
-		_, _ = c.w.WriteString(ftoa2(RadiansToDegrees(*c.textTheta)))
+		_, _ = c.w.WriteString(ftoa2(RadiansToDegrees(c.textTheta)))
 		_, _ = c.w.Write(transformCoords)
 		_, _ = c.w.WriteString(sX)
 		_, _ = c.w.Write(transformCoords)
