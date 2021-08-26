@@ -392,8 +392,24 @@ func (c *canvas) Text(x, y int, body string, style Style) {
 	_, _ = c.w.Write(textEnd)
 }
 
+var (
+	circleStart  = []byte(`<circle cx="`)
+	circleCY     = []byte(`" cy="`)
+	circleRadius = []byte(`" r="`)
+	circleMark   = []byte(`" `)
+	circleEnd    = []byte(`/>`)
+)
+
 func (c *canvas) Circle(x, y, r int, style Style) {
-	_, _ = c.w.Write([]byte(fmt.Sprintf(`<circle cx="%d" cy="%d" r="%d" %s/>`, x, y, r, c.styleAsSVG(style))))
+	_, _ = c.w.Write(circleStart)
+	_, _ = c.w.WriteString(itoa(x))
+	_, _ = c.w.Write(circleCY)
+	_, _ = c.w.WriteString(itoa(y))
+	_, _ = c.w.Write(circleRadius)
+	_, _ = c.w.WriteString(itoa(r))
+	_, _ = c.w.Write(circleMark)
+	_, _ = c.w.WriteString(c.styleAsSVG(style))
+	_, _ = c.w.Write(circleEnd)
 }
 
 var (
