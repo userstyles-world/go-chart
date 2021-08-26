@@ -380,7 +380,7 @@ func (c *canvas) Text(x, y int, body string, style Style) {
 
 	if c.textTheta != nil {
 		_, _ = c.w.Write(transformStarts)
-		_, _ = c.w.WriteString(ftoa(RadiansToDegrees(*c.textTheta), 2))
+		_, _ = c.w.WriteString(ftoa2(RadiansToDegrees(*c.textTheta)))
 		_, _ = c.w.Write(transformCoords)
 		_, _ = c.w.WriteString(sX)
 		_, _ = c.w.Write(transformCoords)
@@ -409,7 +409,7 @@ func (*canvas) getStrokeDashArray(s Style) string {
 	if len(s.StrokeDashArray) > 0 {
 		values := make([]string, 0, len(s.StrokeDashArray))
 		for _, v := range s.StrokeDashArray {
-			values = append(values, ftoa(v, 1))
+			values = append(values, ftoa1(v))
 		}
 		return "stroke-dasharray=\"" + strings.Join(values, ", ") + "\" "
 	}
@@ -475,11 +475,11 @@ func (c *canvas) styleAsSVG(s Style) string {
 	}
 
 	if fs != 0 {
-		pieces = append(pieces, "font-size:"+fmt.Sprintf("%.1fpx", drawing.PointsToPixels(c.dpi, fs)))
+		pieces = append(pieces, "font-size:"+ftoa1(drawing.PointsToPixels(c.dpi, fs))+"px")
 	}
 
 	if s.Font != nil {
 		pieces = append(pieces, c.getFontFace(s))
 	}
-	return fmt.Sprintf("style=\"%s\"", strings.Join(pieces, ";"))
+	return "style=\"" + strings.Join(pieces, ";") + "\""
 }
